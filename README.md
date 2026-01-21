@@ -1,4 +1,4 @@
-# Go Architecture Patterns: A Practical Comparison
+# Go Architecture
 
 ![Go Version](https://img.shields.io/badge/Go-1.24.3-00ADD8?style=for-the-badge&logo=go)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
