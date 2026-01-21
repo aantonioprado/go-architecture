@@ -32,11 +32,11 @@
 
 By exploring this repository, you'll understand:
 
-✅ **Dependency Flow** - How each architecture manages dependencies between layers
-✅ **Testability** - Which patterns make testing easier or harder
-✅ **Complexity Trade-offs** - Initial setup cost vs. long-term maintainability
-✅ **Domain Protection** - How business rules are isolated from infrastructure
-✅ **Real-world Applicability** - When to use each pattern in production
+- ✅ **Dependency Flow** - How each architecture manages dependencies between layers
+- ✅ **Testability** - Which patterns make testing easier or harder
+- ✅ **Complexity Trade-offs** - Initial setup cost vs. long-term maintainability
+- ✅ **Domain Protection** - How business rules are isolated from infrastructure
+- ✅ **Real-world Applicability** - When to use each pattern in production
 
 ### Who This Is For
 
