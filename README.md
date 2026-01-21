@@ -145,10 +145,10 @@ All architectures enforce these **exact same rules**:
 
 ### Key Insights
 
-💡 **Complexity vs Benefits:** More complex architectures provide better separation but higher initial cost
-💡 **No Silver Bullet:** The "best" architecture depends on your team, domain, and scale
-💡 **Start Simple:** Most projects should start simple and evolve complexity when needed
-💡 **Testability Correlation:** Better separation usually means better testability
+- 💡 **Complexity vs Benefits:** More complex architectures provide better separation but higher initial cost
+- 💡 **No Silver Bullet:** The "best" architecture depends on your team, domain, and scale
+- 💡 **Start Simple:** Most projects should start simple and evolve complexity when needed
+- 💡 **Testability Correlation:** Better separation usually means better testability
 
 ---
 
@@ -156,63 +156,63 @@ All architectures enforce these **exact same rules**:
 
 Click on any architecture to see its detailed implementation and explanation:
 
-### 1. [Simple Monolith](./monolith-simple/)
+### 1. [Simple Monolith 🏗️](./monolith-simple/)
 Single package, minimal structure. All code in one place.
 
 **When to use:** Prototypes, MVPs, small internal tools, scripts with HTTP endpoints.
 
 ---
 
-### 2. [Layered Architecture](./layered/)
+### 2. [Layered Architecture 🏗️](./layered/)
 Traditional N-tier: Presentation → Business → Data layers.
 
 **When to use:** Traditional CRUD applications, teams familiar with layered patterns.
 
 ---
 
-### 3. [MVC (Model-View-Controller)](./mvc/)
+### 3. [MVC (Model-View-Controller) 🏗️](./mvc/)
 Separate data (Model), presentation (View), and orchestration (Controller).
 
 **When to use:** Web applications with UI, form-heavy applications, APIs following MVC frameworks.
 
 ---
 
-### 4. [Clean Architecture](./clean-architecture/)
+### 4. [Clean Architecture 🏗️](./clean-architecture/)
 Uncle Bob's Clean Architecture. Dependency Inversion—outer layers depend on inner layers.
 
 **When to use:** Complex, long-lived systems requiring maximum testability.
 
 ---
 
-### 5. [Hexagonal Architecture (Ports & Adapters)](./hexagonal/)
+### 5. [Hexagonal Architecture (Ports & Adapters) 🏗️](./hexagonal/)
 Application core with ports (interfaces) and adapters (implementations) on the outside.
 
 **When to use:** Need to swap infrastructure easily, heavy testing requirements, multiple input sources.
 
 ---
 
-### 6. [Domain-Driven Design (DDD)](./ddd/)
+### 6. [Domain-Driven Design (DDD) 🏗️](./ddd/)
 Rich domain model with ubiquitous language, aggregates, entities, and value objects.
 
 **When to use:** Complex business domains, collaboration with domain experts, long-lived evolving systems.
 
 ---
 
-### 7. [Modular Monolith](./modular-monolith/)
+### 7. [Modular Monolith 🏗️](./modular-monolith/)
 Single deployable with strong module boundaries and explicit contracts.
 
 **When to use:** Growing teams needing autonomy, monolith that needs better structure, preparing for microservices.
 
 ---
 
-### 8. [Event-Driven Architecture](./event-driven/)
+### 8. [Event-Driven Architecture 🏗️](./event-driven/)
 Components communicate via events, enabling loose coupling and async workflows.
 
 **When to use:** Async workflows (email, notifications), need to decouple systems, event sourcing.
 
 ---
 
-### 9. [Microservices](./microservices/)
+### 9. [Microservices 🏗️](./microservices/)
 Multiple independent services, each owning its data and deployable separately.
 
 **When to use:** Large distributed teams, independent scaling needs, polyglot requirements.
@@ -297,11 +297,11 @@ We welcome contributions! Here's how you can help:
 
 ### Guidelines
 
-✅ Keep the API contract identical
-✅ Maintain the same business rules
-✅ Focus on architecture, not features
-✅ Include tests and documentation
-✅ Use Go idiomatic patterns
+- ✅ Keep the API contract identical
+- ✅ Maintain the same business rules
+- ✅ Focus on architecture, not features
+- ✅ Include tests and documentation
+- ✅ Use Go idiomatic patterns
 
 ---
 
