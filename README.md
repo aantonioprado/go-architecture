@@ -12,7 +12,6 @@
 - [The Fixed User CRUD API](#the-fixed-user-crud-api)
 - [User Domain Model](#user-domain-model)
 - [Business Rules](#business-rules)
-- [What's Intentionally Simple](#whats-intentionally-simple)
 - [Architecture Comparison](#architecture-comparison)
 - [The 9 Architectures](#the-9-architectures)
 - [Directory Structure](#directory-structure)
@@ -307,4 +306,4 @@ We welcome contributions! Here's how you can help:
 
 ## License
 
-MIT License - see LICENSE file for details.
+[MIT License](LICENSE) - see LICENSE file for details.
