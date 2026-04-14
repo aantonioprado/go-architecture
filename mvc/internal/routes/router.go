@@ -17,5 +17,7 @@ func NewRouter(h Handlers) http.Handler {
 
 	r.Use(middleware.Logger)
 
+	r.Get("/health", h.Health.GetHealthCheck)
+
 	return r
 }

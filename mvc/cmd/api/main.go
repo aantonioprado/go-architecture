@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-architecture-mvc/internal/config"
+	"go-architecture-mvc/internal/controller"
 	"go-architecture-mvc/internal/routes"
 	"log"
 	"net/http"
@@ -10,7 +11,11 @@ import (
 func main() {
 	cfg := config.Load()
 
-	handlers := routes.Handlers{}
+	healthController := controller.NewHealthController()
+
+	handlers := routes.Handlers{
+		Health: healthController,
+	}
 
 	r := routes.NewRouter(handlers)
 
