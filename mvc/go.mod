@@ -1,6 +1,6 @@
 module go-architecture-mvc
 
-go 1.26.1
+go 1.24.3
 
 require github.com/go-chi/chi/v5 v5.2.5
 
