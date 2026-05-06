@@ -1,13 +1,18 @@
 package controller
 
 import (
+	"go-architecture-mvc/internal/repository"
 	"net/http"
 )
 
-type UserController struct{}
+type UserController struct {
+	repo *repository.UserRepository
+}
 
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(repo *repository.UserRepository) *UserController {
+	return &UserController{
+		repo: repo,
+	}
 }
 
 func (h *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {

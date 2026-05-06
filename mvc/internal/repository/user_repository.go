@@ -2,10 +2,28 @@ package repository
 
 import "go-architecture-mvc/internal/model"
 
-type UserRepository interface {
-	CreateUser(user *model.User) error
-	GetByIDUser(id string) (*model.User, error)
-	GetAllUser() ([]*model.User, error)
-	UpdateUser(user *model.User) error
-	DeleteUser(id string) error
+type UserRepository struct{}
+
+func NewUserRepository() *UserRepository {
+	return &UserRepository{}
+}
+
+func (r *UserRepository) Create(user *model.User) error {
+	return nil
+}
+
+func (r *UserRepository) FindByID(id string) (*model.User, error) {
+	return nil, nil
+}
+
+func (r *UserRepository) FindAll() ([]*model.User, error) {
+	return nil, nil
+}
+
+func (r *UserRepository) Update(user *model.User) error {
+	return nil
+}
+
+func (r *UserRepository) Delete(id string) error {
+	return nil
 }

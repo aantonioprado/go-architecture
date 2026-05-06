@@ -17,5 +17,5 @@ func (h *HealthController) GetHealthCheck(w http.ResponseWriter, r *http.Request
 		Status: "OK",
 	}
 
-	response.Send(w, http.StatusOK, res, "")
+	response.JSON(w, http.StatusOK, res)
 }
