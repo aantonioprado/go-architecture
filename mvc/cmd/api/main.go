@@ -12,9 +12,11 @@ func main() {
 	cfg := config.Load()
 
 	healthController := controller.NewHealthController()
+	userController := controller.NewUserController()
 
 	handlers := routes.Handlers{
 		Health: healthController,
+		Users:  userController,
 	}
 
 	r := routes.NewRouter(handlers)
