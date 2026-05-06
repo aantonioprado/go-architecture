@@ -20,6 +20,7 @@ func NewRouter(h Handlers) http.Handler {
 
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/", h.Users.CreateUser)
+		r.Get("/", h.Users.ListUsers)
 		r.Get("/{id}", h.Users.FindUserByID)
 	})
 

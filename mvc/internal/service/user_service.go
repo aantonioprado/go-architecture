@@ -19,6 +19,10 @@ func (s *UserService) Create(name, email string) error {
 	return nil
 }
 
+func (s *UserService) FindAll() ([]*model.User, error) {
+	return nil, nil
+}
+
 func (s *UserService) FindByID(id string) (*model.User, error) {
 	return nil, nil
 }
