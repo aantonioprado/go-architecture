@@ -21,3 +21,6 @@ func (h *UserController) FindUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
+
+func (h *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
+}

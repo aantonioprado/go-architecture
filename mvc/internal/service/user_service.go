@@ -30,3 +30,7 @@ func (s *UserService) FindByID(id string) (*model.User, error) {
 func (s *UserService) Update(id, name, email string) error {
 	return nil
 }
+
+func (s *UserService) Delete(id string) error {
+	return nil
+}
