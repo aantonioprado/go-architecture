@@ -12,3 +12,6 @@ func NewUserController() *UserController {
 
 func (h *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
+
+func (h *UserController) FindUserByID(w http.ResponseWriter, r *http.Request) {
+}

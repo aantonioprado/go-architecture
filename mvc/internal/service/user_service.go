@@ -1,6 +1,9 @@
 package service
 
-import "go-architecture-mvc/internal/repository"
+import (
+	"go-architecture-mvc/internal/model"
+	"go-architecture-mvc/internal/repository"
+)
 
 type UserService struct {
 	repo repository.UserRepository
@@ -14,4 +17,8 @@ func NewUserService(r repository.UserRepository) *UserService {
 
 func (s *UserService) Create(name, email string) error {
 	return nil
+}
+
+func (s *UserService) FindByID(id string) (*model.User, error) {
+	return nil, nil
 }
