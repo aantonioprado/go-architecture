@@ -1,9 +1,9 @@
 package server
 
 import (
-	"go-architecture-mvc/internal/controller"
-	"go-architecture-mvc/internal/repository"
-	"go-architecture-mvc/internal/routes"
+	"github.com/aantonioprado/go-architecture/mvc/internal/controller"
+	"github.com/aantonioprado/go-architecture/mvc/internal/repository"
+	"github.com/aantonioprado/go-architecture/mvc/internal/routes"
 	"net/http"
 )
 

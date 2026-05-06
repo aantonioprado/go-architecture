@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"go-architecture-mvc/internal/controller"
-	"go-architecture-mvc/internal/middleware"
+	"github.com/aantonioprado/go-architecture/mvc/internal/controller"
+	"github.com/aantonioprado/go-architecture/mvc/internal/middleware"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

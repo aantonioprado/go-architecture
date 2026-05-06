@@ -1,6 +1,6 @@
 package repository
 
-import "go-architecture-mvc/internal/model"
+import "github.com/aantonioprado/go-architecture/mvc/internal/model"
 
 type UserRepository struct{}
 

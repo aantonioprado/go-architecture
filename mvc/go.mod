@@ -1,4 +1,4 @@
-module go-architecture-mvc
+module github.com/aantonioprado/go-architecture/mvc
 
 go 1.24.3
 

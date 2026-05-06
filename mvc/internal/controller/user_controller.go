@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"go-architecture-mvc/internal/repository"
+	"github.com/aantonioprado/go-architecture/mvc/internal/repository"
 	"net/http"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go-architecture-mvc/internal/config"
-	"go-architecture-mvc/internal/server"
+	"github.com/aantonioprado/go-architecture/mvc/internal/config"
+	"github.com/aantonioprado/go-architecture/mvc/internal/server"
 	"log"
 	"net/http"
 )

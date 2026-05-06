@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"go-architecture-mvc/internal/dto"
-	"go-architecture-mvc/internal/response"
+	"github.com/aantonioprado/go-architecture/mvc/internal/dto"
+	"github.com/aantonioprado/go-architecture/mvc/internal/response"
 	"net/http"
 )
 
