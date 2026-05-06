@@ -18,3 +18,6 @@ func (h *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserController) FindUserByID(w http.ResponseWriter, r *http.Request) {
 }
+
+func (h *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
+}

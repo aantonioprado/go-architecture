@@ -26,3 +26,7 @@ func (s *UserService) FindAll() ([]*model.User, error) {
 func (s *UserService) FindByID(id string) (*model.User, error) {
 	return nil, nil
 }
+
+func (s *UserService) Update(id, name, email string) error {
+	return nil
+}

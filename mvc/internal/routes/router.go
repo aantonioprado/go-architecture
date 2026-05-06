@@ -22,6 +22,7 @@ func NewRouter(h Handlers) http.Handler {
 		r.Post("/", h.Users.CreateUser)
 		r.Get("/", h.Users.ListUsers)
 		r.Get("/{id}", h.Users.FindUserByID)
+		r.Put("/{id}", h.Users.UpdateUser)
 	})
 
 	r.Get("/health", h.Health.GetHealthCheck)
