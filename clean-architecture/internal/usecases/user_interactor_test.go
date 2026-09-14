@@ -207,6 +207,10 @@ func TestUserInteractor_UpdateUser(t *testing.T) {
 	if out.user.Name != "Antônio Elias Prado" {
 		t.Errorf("expected updated name, got %q", out.user.Name)
 	}
+
+	if !out.user.CreatedAt.Equal(created.created.CreatedAt) {
+		t.Errorf("expected CreatedAt to be preserved, got %v vs %v", out.user.CreatedAt, created.created.CreatedAt)
+	}
 }
 
 func TestUserInteractor_UpdateUser_NotFound(t *testing.T) {
