@@ -102,3 +102,58 @@ To run with hot reload:
 ```bash
 air
 ```
+
+---
+
+## Example Usage
+
+**Create user:**
+
+```bash
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Antônio Prado","email":"antonio@antonioeprado.dev"}'
+```
+
+**List users:**
+
+```bash
+curl http://localhost:8080/users
+```
+
+**Get user by id:**
+
+```bash
+curl http://localhost:8080/users/{id}
+```
+
+**Update user:**
+
+```bash
+curl -X PUT http://localhost:8080/users/{id} \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Antônio Elias Prado","email":"antonio@antonioeprado.dev"}'
+```
+
+**Delete user:**
+
+```bash
+curl -X DELETE http://localhost:8080/users/{id}
+```
+
+**Health check:**
+
+```bash
+curl http://localhost:8080/health
+```
+
+Response shape for a user:
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Antônio Prado",
+  "email": "antonio@antonioeprado.dev",
+  "createdAt": "2026-01-20T00:00:00Z"
+}
+```
