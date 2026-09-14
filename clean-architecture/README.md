@@ -42,6 +42,7 @@ clean-architecture/
 │   ├── usecases/
 │   ├── adapters/
 │   │   ├── dto/
+│   │   ├── response/
 │   │   ├── presenter/
 │   │   ├── controller/
 │   │   └── gateway/
