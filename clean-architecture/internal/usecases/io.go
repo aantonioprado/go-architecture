@@ -21,3 +21,9 @@ type GetUserInput struct {
 type ListUsersOutput struct {
 	Users []UserOutput
 }
+
+type UpdateUserInput struct {
+	ID    string
+	Name  string
+	Email string
+}

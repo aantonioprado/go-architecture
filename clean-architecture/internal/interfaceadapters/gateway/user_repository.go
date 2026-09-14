@@ -8,9 +8,6 @@ import (
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
-// InMemoryUserRepository implements usecases.UserRepository. It is an outer
-// ring type: it depends inward on entities and on the usecases port it
-// satisfies, never the other way around.
 type InMemoryUserRepository struct {
 	mu    sync.RWMutex
 	users map[string]*entities.User
@@ -57,6 +54,19 @@ func (r *InMemoryUserRepository) FindById(id string) (*entities.User, error) {
 	}
 
 	return user, nil
+}
+
+func (r *InMemoryUserRepository) Update(user *entities.User) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.users[user.ID]; !ok {
+		return usecases.ErrUserNotFound
+	}
+
+	r.users[user.ID] = user
+
+	return nil
 }
 
 func (r *InMemoryUserRepository) FindByEmail(email string) (*entities.User, error) {

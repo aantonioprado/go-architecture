@@ -2,9 +2,6 @@ package usecases
 
 import "github.com/aantonioprado/go-architecture/clean-architecture/internal/entities"
 
-// UserInteractor implements UserInputPort. It depends only on the
-// UserRepository port it defines itself; it has no knowledge of whatever
-// concrete gateway is plugged in at the composition root.
 type UserInteractor struct {
 	repo UserRepository
 }
@@ -58,6 +55,34 @@ func (uc *UserInteractor) GetUserById(input GetUserInput, output UserOutputPort)
 	}
 
 	output.PresentUser(toUserOutput(user))
+}
+
+func (uc *UserInteractor) UpdateUser(input UpdateUserInput, output UserOutputPort) {
+	existing, err := uc.repo.FindById(input.ID)
+	if err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	updated, err := existing.Update(input.Name, input.Email)
+	if err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	if updated.Email != existing.Email {
+		if _, err := uc.repo.FindByEmail(updated.Email); err == nil {
+			output.PresentError(ErrEmailTaken)
+			return
+		}
+	}
+
+	if err := uc.repo.Update(updated); err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	output.PresentUser(toUserOutput(updated))
 }
 
 func toUserOutput(user *entities.User) UserOutput {

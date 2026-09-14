@@ -11,8 +11,6 @@ import (
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
-// UserController depends on usecases.UserInputPort, the interface, not on
-// the concrete UserInteractor.
 type UserController struct {
 	usecase usecases.UserInputPort
 }
@@ -50,5 +48,22 @@ func (c *UserController) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	c.usecase.GetUserById(usecases.GetUserInput{
 		ID: chi.URLParam(r, "id"),
+	}, out)
+}
+
+func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	out := presenter.NewHTTPUserPresenter(w)
+
+	var req dto.UpdateUserRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		out.PresentError(err)
+		return
+	}
+
+	c.usecase.UpdateUser(usecases.UpdateUserInput{
+		ID:    chi.URLParam(r, "id"),
+		Name:  req.Name,
+		Email: req.Email,
 	}, out)
 }

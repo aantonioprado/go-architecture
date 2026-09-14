@@ -9,8 +9,6 @@ import (
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
-// Build is the composition root: it is the only place in this
-// architecture that knows about a concrete gateway implementation.
 func Build() http.Handler {
 	userRepository := gateway.NewInMemoryUserRepository()
 	userInteractor := usecases.NewUserInteractor(userRepository)

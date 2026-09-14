@@ -10,9 +10,6 @@ import (
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
-// HTTPUserPresenter implements usecases.UserOutputPort. It is the only
-// place in this architecture that writes an HTTP response: the interactor
-// never touches http.ResponseWriter directly.
 type HTTPUserPresenter struct {
 	w http.ResponseWriter
 }

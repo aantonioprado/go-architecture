@@ -7,9 +7,6 @@ import (
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
-// fakeUserRepository and fakePresenter let the use case be tested without a
-// real gateway or HTTP presenter, demonstrating the payoff of depending on
-// interfaces rather than concrete types.
 type fakeUserRepository struct {
 	users map[string]*entities.User
 }
@@ -39,6 +36,16 @@ func (r *fakeUserRepository) FindById(id string) (*entities.User, error) {
 	}
 
 	return user, nil
+}
+
+func (r *fakeUserRepository) Update(user *entities.User) error {
+	if _, ok := r.users[user.ID]; !ok {
+		return usecases.ErrUserNotFound
+	}
+
+	r.users[user.ID] = user
+
+	return nil
 }
 
 func (r *fakeUserRepository) FindByEmail(email string) (*entities.User, error) {
@@ -162,5 +169,55 @@ func TestUserInteractor_GetUserById_NotFound(t *testing.T) {
 
 	if out.err == nil {
 		t.Fatal("expected PresentError to be called")
+	}
+}
+
+func TestUserInteractor_UpdateUser(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	created := &fakePresenter{}
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, created)
+
+	out := &fakePresenter{}
+	interactor.UpdateUser(usecases.UpdateUserInput{
+		ID:    created.created.ID,
+		Name:  "Antônio Elias Prado",
+		Email: "antonio@antonioeprado.dev",
+	}, out)
+
+	if out.user == nil {
+		t.Fatal("expected PresentUser to be called")
+	}
+
+	if out.user.Name != "Antônio Elias Prado" {
+		t.Errorf("expected updated name, got %q", out.user.Name)
+	}
+}
+
+func TestUserInteractor_UpdateUser_NotFound(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	out := &fakePresenter{}
+	interactor.UpdateUser(usecases.UpdateUserInput{ID: "unknown-id", Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, out)
+
+	if out.err == nil {
+		t.Fatal("expected PresentError to be called")
+	}
+}
+
+func TestUserInteractor_UpdateUser_DuplicateEmail(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	first := &fakePresenter{}
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, first)
+
+	second := &fakePresenter{}
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Outro", Email: "outro@antonioeprado.dev"}, second)
+
+	out := &fakePresenter{}
+	interactor.UpdateUser(usecases.UpdateUserInput{ID: second.created.ID, Name: "Outro", Email: "antonio@antonioeprado.dev"}, out)
+
+	if out.err == nil {
+		t.Fatal("expected PresentError to be called for duplicate email")
 	}
 }

@@ -32,6 +32,19 @@ func NewUser(name, email string) (*User, error) {
 	}, nil
 }
 
+func (u *User) Update(name, email string) (*User, error) {
+	if err := validate(name, email); err != nil {
+		return nil, err
+	}
+
+	return &User{
+		ID:        u.ID,
+		Name:      name,
+		Email:     email,
+		CreatedAt: u.CreatedAt,
+	}, nil
+}
+
 func validate(name, email string) error {
 	if name == "" {
 		return ErrNameRequired
