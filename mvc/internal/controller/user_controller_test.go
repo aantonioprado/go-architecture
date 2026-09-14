@@ -93,3 +93,71 @@ func TestUserController_CreateUser_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected status %d, got %d", http.StatusConflict, rec.Code)
 	}
 }
+
+func TestUserController_ListUsers(t *testing.T) {
+	repo := repository.NewUserRepository()
+	ctrl := controller.NewUserController(repo)
+
+	body, _ := json.Marshal(dto.CreateUserRequest{
+		Name:  "Antônio Prado",
+		Email: "antonio@antonioeprado.dev",
+	})
+	ctrl.CreateUser(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	req := httptest.NewRequest(http.MethodGet, "/users", nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.ListUsers(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+
+	var res []dto.UserResponse
+	if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if len(res) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(res))
+	}
+}
+
+func TestUserController_FindUserByID(t *testing.T) {
+	repo := repository.NewUserRepository()
+	ctrl := controller.NewUserController(repo)
+
+	body, _ := json.Marshal(dto.CreateUserRequest{
+		Name:  "Antônio Prado",
+		Email: "antonio@antonioeprado.dev",
+	})
+	createRec := httptest.NewRecorder()
+	ctrl.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	var created dto.UserResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := newRequestWithID(http.MethodGet, "/users/"+created.ID, created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.FindUserByID(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+}
+
+func TestUserController_FindUserByID_NotFound(t *testing.T) {
+	ctrl := controller.NewUserController(repository.NewUserRepository())
+
+	req := newRequestWithID(http.MethodGet, "/users/unknown-id", "unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.FindUserByID(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}
