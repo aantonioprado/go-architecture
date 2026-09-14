@@ -88,6 +88,17 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, toUserResponse(user))
 }
 
+func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	if err := h.service.Delete(id); err != nil {
+		writeServiceError(w, err)
+		return
+	}
+
+	response.NoContent(w)
+}
+
 func toUserResponse(user *model.User) dto.UserResponse {
 	return dto.UserResponse{
 		ID:        user.ID,

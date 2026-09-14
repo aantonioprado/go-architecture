@@ -71,6 +71,19 @@ func (r *UserRepository) Update(user *model.User) error {
 	return nil
 }
 
+func (r *UserRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.users[id]; !ok {
+		return ErrUserNotFound
+	}
+
+	delete(r.users, id)
+
+	return nil
+}
+
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()

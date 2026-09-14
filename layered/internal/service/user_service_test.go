@@ -143,3 +143,28 @@ func TestUserService_Update_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected ErrEmailTaken, got %v", err)
 	}
 }
+
+func TestUserService_Delete(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	created, err := svc.Create("Antônio Prado", "antonio@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if err := svc.Delete(created.ID); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if _, err := svc.GetById(created.ID); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
+
+func TestUserService_Delete_NotFound(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	if err := svc.Delete("unknown-id"); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}

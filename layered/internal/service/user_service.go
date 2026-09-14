@@ -87,6 +87,10 @@ func (s *UserService) Update(id, name, email string) (*model.User, error) {
 	return updated, nil
 }
 
+func (s *UserService) Delete(id string) error {
+	return s.repo.Delete(id)
+}
+
 func validate(name, email string) error {
 	if name == "" {
 		return ErrNameRequired

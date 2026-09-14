@@ -24,6 +24,7 @@ func NewRouter(h Handlers) http.Handler {
 		r.Get("/", h.Users.ListUsers)
 		r.Get("/{id}", h.Users.FindUserById)
 		r.Put("/{id}", h.Users.UpdateUser)
+		r.Delete("/{id}", h.Users.DeleteUser)
 	})
 
 	r.Get("/health", h.Health.GetHealthCheck)

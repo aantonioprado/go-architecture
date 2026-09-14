@@ -152,6 +152,41 @@ func TestUserHandler_FindUserById_NotFound(t *testing.T) {
 	}
 }
 
+func TestUserHandler_DeleteUser(t *testing.T) {
+	h := newUserHandler()
+
+	createBody, _ := json.Marshal(dto.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	createRec := httptest.NewRecorder()
+	h.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(createBody)))
+
+	var created dto.UserResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := newRequestWithID(http.MethodDelete, "/users/"+created.ID, created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	h.DeleteUser(rec, req)
+
+	if rec.Code != http.StatusNoContent {
+		t.Fatalf("expected status %d, got %d", http.StatusNoContent, rec.Code)
+	}
+}
+
+func TestUserHandler_DeleteUser_NotFound(t *testing.T) {
+	h := newUserHandler()
+
+	req := newRequestWithID(http.MethodDelete, "/users/unknown-id", "unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	h.DeleteUser(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}
+
 func TestUserHandler_UpdateUser(t *testing.T) {
 	h := newUserHandler()
 
