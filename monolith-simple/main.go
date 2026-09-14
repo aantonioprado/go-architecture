@@ -12,6 +12,10 @@ import (
 func newRouter(store *userStore) http.Handler {
 	r := chi.NewRouter()
 
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/", store.handleCreateUser)
+	})
+
 	r.Get("/health", handleHealth)
 
 	return r

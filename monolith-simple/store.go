@@ -33,6 +33,40 @@ func newUserStore() *userStore {
 	}
 }
 
+func (s *userStore) create(name, email string) (*User, error) {
+	if err := validate(name, email); err != nil {
+		return nil, err
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.findByEmail(email) != nil {
+		return nil, ErrEmailTaken
+	}
+
+	user := &User{
+		ID:        newID(),
+		Name:      name,
+		Email:     email,
+		CreatedAt: time.Now(),
+	}
+
+	s.users[user.ID] = user
+
+	return user, nil
+}
+
+func (s *userStore) findByEmail(email string) *User {
+	for _, user := range s.users {
+		if user.Email == email {
+			return user
+		}
+	}
+
+	return nil
+}
+
 func validate(name, email string) error {
 	if name == "" {
 		return ErrNameRequired
