@@ -135,7 +135,7 @@ All architectures enforce these **exact same rules**:
 | [**Simple Monolith**](./monolith-simple/) | ⭐ Low | ⭐⭐ Moderate | ⭐ Very Low | Mixed | Prototypes, MVPs, small tools | ⭐ Very Easy |
 | [**Layered**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
 | [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
-| [**Clean Architecture 🏗️**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
+| [**Clean Architecture**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
 | [**Hexagonal 🏗️**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
 | [**DDD 🏗️**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
 | [**Modular Monolith 🏗️**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
@@ -176,7 +176,7 @@ Separate data (Model), presentation (View), and orchestration (Controller).
 
 ---
 
-### 4. [Clean Architecture 🏗️](./clean-architecture/)
+### 4. [Clean Architecture](./clean-architecture/)
 Uncle Bob's Clean Architecture. Dependency Inversion—outer layers depend on inner layers.
 
 **When to use:** Complex, long-lived systems requiring maximum testability.
@@ -225,7 +225,7 @@ go-architecture/
 ├── monolith-simple/                 # 1. Simple monolith
 ├── layered/                         # 2. Layered
 ├── mvc/                             # 3. MVC pattern
-├── 🏗️ clean-architecture/           # 4. Clean Architecture
+├── clean-architecture/              # 4. Clean Architecture
 ├── 🏗️ hexagonal/                    # 5. Hexagonal (Ports & Adapters)
 ├── 🏗️ ddd/                          # 6. Domain-Driven Design
 ├── 🏗️ modular-monolith/             # 7. Modular Monolith
