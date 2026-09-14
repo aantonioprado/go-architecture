@@ -132,7 +132,7 @@ All architectures enforce these **exact same rules**:
 
 | Architecture | Separation | Testability | Complexity | Dependency Flow | Best For | Learning Curve |
 |--------------|-----------|-------------|------------|-----------------|----------|----------------|
-| [**Simple Monolith 🏗️**](./monolith-simple/) | ⭐ Low | ⭐⭐ Moderate | ⭐ Very Low | Mixed | Prototypes, MVPs, small tools | ⭐ Very Easy |
+| [**Simple Monolith**](./monolith-simple/) | ⭐ Low | ⭐⭐ Moderate | ⭐ Very Low | Mixed | Prototypes, MVPs, small tools | ⭐ Very Easy |
 | [**Layered**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
 | [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
 | [**Clean Architecture 🏗️**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
@@ -155,7 +155,7 @@ All architectures enforce these **exact same rules**:
 
 Click on any architecture to see its detailed implementation and explanation:
 
-### 1. [Simple Monolith 🏗️](./monolith-simple/)
+### 1. [Simple Monolith](./monolith-simple/)
 Single package, minimal structure. All code in one place.
 
 **When to use:** Prototypes, MVPs, small internal tools, scripts with HTTP endpoints.
@@ -222,7 +222,7 @@ Multiple independent services, each owning its data and deployable separately.
 
 ```
 go-architecture/
-├── 🏗️ monolith-simple/              # 1. Simple monolith
+├── monolith-simple/                 # 1. Simple monolith
 ├── layered/                         # 2. Layered
 ├── mvc/                             # 3. MVC pattern
 ├── 🏗️ clean-architecture/           # 4. Clean Architecture
