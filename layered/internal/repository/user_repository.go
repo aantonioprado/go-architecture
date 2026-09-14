@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"sort"
 	"sync"
 
 	"github.com/aantonioprado/go-architecture/layered/internal/model"
@@ -27,6 +28,34 @@ func (r *UserRepository) Create(user *model.User) error {
 	r.users[user.ID] = user
 
 	return nil
+}
+
+func (r *UserRepository) FindById(id string) (*model.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	user, ok := r.users[id]
+	if !ok {
+		return nil, ErrUserNotFound
+	}
+
+	return user, nil
+}
+
+func (r *UserRepository) FindAll() ([]*model.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	users := make([]*model.User, 0, len(r.users))
+	for _, user := range r.users {
+		users = append(users, user)
+	}
+
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].CreatedAt.Before(users[j].CreatedAt)
+	})
+
+	return users, nil
 }
 
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {

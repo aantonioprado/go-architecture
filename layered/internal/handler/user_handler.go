@@ -6,8 +6,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/aantonioprado/go-architecture/layered/internal/dto"
 	"github.com/aantonioprado/go-architecture/layered/internal/model"
+	"github.com/aantonioprado/go-architecture/layered/internal/repository"
 	"github.com/aantonioprado/go-architecture/layered/internal/response"
 	"github.com/aantonioprado/go-architecture/layered/internal/service"
 )
@@ -39,6 +42,33 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusCreated, toUserResponse(user))
 }
 
+func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := h.service.List()
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	res := make([]dto.UserResponse, 0, len(users))
+	for _, user := range users {
+		res = append(res, toUserResponse(user))
+	}
+
+	response.JSON(w, http.StatusOK, res)
+}
+
+func (h *UserHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	user, err := h.service.GetById(id)
+	if err != nil {
+		writeServiceError(w, err)
+		return
+	}
+
+	response.JSON(w, http.StatusOK, toUserResponse(user))
+}
+
 func toUserResponse(user *model.User) dto.UserResponse {
 	return dto.UserResponse{
 		ID:        user.ID,
@@ -50,6 +80,8 @@ func toUserResponse(user *model.User) dto.UserResponse {
 
 func writeServiceError(w http.ResponseWriter, err error) {
 	switch {
+	case errors.Is(err, repository.ErrUserNotFound):
+		response.Error(w, http.StatusNotFound, err.Error())
 	case errors.Is(err, service.ErrNameRequired), errors.Is(err, service.ErrEmailRequired):
 		response.Error(w, http.StatusBadRequest, err.Error())
 	case errors.Is(err, service.ErrEmailTaken):

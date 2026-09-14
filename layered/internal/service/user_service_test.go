@@ -52,3 +52,46 @@ func TestUserService_Create_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected ErrEmailTaken, got %v", err)
 	}
 }
+
+func TestUserService_GetById(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	created, err := svc.Create("Antônio Prado", "antonio@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	found, err := svc.GetById(created.ID)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if found.Email != created.Email {
+		t.Errorf("expected email %q, got %q", created.Email, found.Email)
+	}
+}
+
+func TestUserService_GetById_NotFound(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	if _, err := svc.GetById("unknown-id"); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
+
+func TestUserService_List(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	if _, err := svc.Create("Antônio Prado", "antonio@antonioeprado.dev"); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	users, err := svc.List()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(users) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(users))
+	}
+}

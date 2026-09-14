@@ -49,6 +49,14 @@ func (s *UserService) Create(name, email string) (*model.User, error) {
 	return user, nil
 }
 
+func (s *UserService) List() ([]*model.User, error) {
+	return s.repo.FindAll()
+}
+
+func (s *UserService) GetById(id string) (*model.User, error) {
+	return s.repo.FindById(id)
+}
+
 func validate(name, email string) error {
 	if name == "" {
 		return ErrNameRequired

@@ -91,3 +91,63 @@ func TestUserHandler_CreateUser_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected status %d, got %d", http.StatusConflict, rec.Code)
 	}
 }
+
+func TestUserHandler_ListUsers(t *testing.T) {
+	h := newUserHandler()
+
+	body, _ := json.Marshal(dto.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	h.CreateUser(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	req := httptest.NewRequest(http.MethodGet, "/users", nil)
+	rec := httptest.NewRecorder()
+
+	h.ListUsers(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+
+	var res []dto.UserResponse
+	if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if len(res) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(res))
+	}
+}
+
+func TestUserHandler_FindUserById(t *testing.T) {
+	h := newUserHandler()
+
+	body, _ := json.Marshal(dto.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	createRec := httptest.NewRecorder()
+	h.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	var created dto.UserResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := newRequestWithID(http.MethodGet, "/users/"+created.ID, created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	h.FindUserById(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+}
+
+func TestUserHandler_FindUserById_NotFound(t *testing.T) {
+	h := newUserHandler()
+
+	req := newRequestWithID(http.MethodGet, "/users/unknown-id", "unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	h.FindUserById(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}
