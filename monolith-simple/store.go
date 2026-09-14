@@ -86,6 +86,35 @@ func (s *userStore) getById(id string) (*User, error) {
 	return user, nil
 }
 
+func (s *userStore) update(id, name, email string) (*User, error) {
+	if err := validate(name, email); err != nil {
+		return nil, err
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	existing, ok := s.users[id]
+	if !ok {
+		return nil, ErrUserNotFound
+	}
+
+	if email != existing.Email && s.findByEmail(email) != nil {
+		return nil, ErrEmailTaken
+	}
+
+	updated := &User{
+		ID:        existing.ID,
+		Name:      name,
+		Email:     email,
+		CreatedAt: existing.CreatedAt,
+	}
+
+	s.users[id] = updated
+
+	return updated, nil
+}
+
 func (s *userStore) findByEmail(email string) *User {
 	for _, user := range s.users {
 		if user.Email == email {

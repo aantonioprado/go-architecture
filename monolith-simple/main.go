@@ -16,6 +16,7 @@ func newRouter(store *userStore) http.Handler {
 		r.Post("/", store.handleCreateUser)
 		r.Get("/", store.handleListUsers)
 		r.Get("/{id}", store.handleGetUserById)
+		r.Put("/{id}", store.handleUpdateUser)
 	})
 
 	r.Get("/health", handleHealth)
