@@ -10,7 +10,7 @@ Four rings, each depending only on the ring inside it:
 
 - **Entities** (`entities`) - the `User` type and the rules that make one valid on its own (name/email required, ID and `CreatedAt` generated). Depends on nothing.
 - **Use Cases** (`usecases`) - the `UserInteractor`, plus two ports it defines itself: `UserRepository` (persistence) and `UserOutputPort` (presentation). It depends only on Entities and on interfaces it owns.
-- **Interface Adapters** (`interfaceadapters`) - a Gateway (`InMemoryUserRepository`) implementing `UserRepository`, a Presenter (`HTTPUserPresenter`) implementing `UserOutputPort`, and a Controller decoding HTTP requests into use case input.
+- **Interface Adapters** (`adapters`) - a Gateway (`InMemoryUserRepository`) implementing `UserRepository`, a Presenter (`HTTPUserPresenter`) implementing `UserOutputPort`, and a Controller decoding HTTP requests into use case input.
 - **Frameworks & Drivers** - `cmd/api`, `config`, `middleware`, `routes`, `server`. The composition root (`server.Build`) is the only place that wires a concrete Gateway into the Interactor and a concrete Controller into the router.
 
 The dependency inversion happens twice: the Gateway is an outer type satisfying an inner interface, and so is the Presenter. Neither the Interactor nor the Use Cases ring imports either of them.
@@ -40,7 +40,7 @@ clean-architecture/
 ├── internal/
 │   ├── entities/
 │   ├── usecases/
-│   ├── interfaceadapters/
+│   ├── adapters/
 │   │   ├── dto/
 │   │   ├── presenter/
 │   │   ├── controller/

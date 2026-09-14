@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/dto"
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/presenter"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/dto"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/presenter"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 

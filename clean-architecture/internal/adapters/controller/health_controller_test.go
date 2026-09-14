@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/controller"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/controller"
 )
 
 func TestHealthController_GetHealthCheck(t *testing.T) {

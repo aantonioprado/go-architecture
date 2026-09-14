@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/gateway"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/entities"
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/gateway"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 

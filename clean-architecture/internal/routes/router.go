@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/controller"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/controller"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/middleware"
 )
 

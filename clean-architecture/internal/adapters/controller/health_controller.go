@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/dto"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/dto"
 )
 
 type HealthController struct{}

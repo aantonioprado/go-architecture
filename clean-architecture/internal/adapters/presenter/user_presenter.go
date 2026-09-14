@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/dto"
+	"github.com/aantonioprado/go-architecture/clean-architecture/internal/adapters/dto"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
 )
 
