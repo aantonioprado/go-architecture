@@ -86,3 +86,63 @@ func TestCreateUser_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected status %d, got %d", http.StatusConflict, rec.Code)
 	}
 }
+
+func TestListUsers(t *testing.T) {
+	router := newRouter(newUserStore())
+
+	body, _ := json.Marshal(createUserRequest{Name: "Antônio Prado", Email: "listagem@antonioeprado.dev"})
+	router.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	req := httptest.NewRequest(http.MethodGet, "/users", nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+
+	var res []userResponse
+	if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if len(res) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(res))
+	}
+}
+
+func TestGetUserById(t *testing.T) {
+	router := newRouter(newUserStore())
+
+	body, _ := json.Marshal(createUserRequest{Name: "Antônio Prado", Email: "busca@antonioeprado.dev"})
+	createRec := httptest.NewRecorder()
+	router.ServeHTTP(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	var created userResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/users/"+created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+}
+
+func TestGetUserById_NotFound(t *testing.T) {
+	router := newRouter(newUserStore())
+
+	req := httptest.NewRequest(http.MethodGet, "/users/unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}

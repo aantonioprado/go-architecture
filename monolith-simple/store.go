@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"sort"
 	"sync"
 	"time"
 )
@@ -53,6 +54,34 @@ func (s *userStore) create(name, email string) (*User, error) {
 	}
 
 	s.users[user.ID] = user
+
+	return user, nil
+}
+
+func (s *userStore) list() []*User {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	users := make([]*User, 0, len(s.users))
+	for _, user := range s.users {
+		users = append(users, user)
+	}
+
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].CreatedAt.Before(users[j].CreatedAt)
+	})
+
+	return users
+}
+
+func (s *userStore) getById(id string) (*User, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	user, ok := s.users[id]
+	if !ok {
+		return nil, ErrUserNotFound
+	}
 
 	return user, nil
 }

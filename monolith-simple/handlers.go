@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func writeJSON(w http.ResponseWriter, status int, data any) {
@@ -62,6 +64,29 @@ func (s *userStore) handleCreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusCreated, toUserResponse(user))
+}
+
+func (s *userStore) handleListUsers(w http.ResponseWriter, r *http.Request) {
+	users := s.list()
+
+	res := make([]userResponse, 0, len(users))
+	for _, user := range users {
+		res = append(res, toUserResponse(user))
+	}
+
+	writeJSON(w, http.StatusOK, res)
+}
+
+func (s *userStore) handleGetUserById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	user, err := s.getById(id)
+	if err != nil {
+		writeStoreError(w, err)
+		return
+	}
+
+	writeJSON(w, http.StatusOK, toUserResponse(user))
 }
 
 func writeStoreError(w http.ResponseWriter, err error) {
