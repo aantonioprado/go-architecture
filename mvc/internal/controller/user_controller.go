@@ -104,6 +104,14 @@ func (h *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	if err := h.repo.Delete(id); err != nil {
+		writeRepositoryError(w, err)
+		return
+	}
+
+	response.NoContent(w)
 }
 
 func toUserResponse(user *model.User) dto.UserResponse {

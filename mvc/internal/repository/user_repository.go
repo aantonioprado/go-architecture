@@ -83,6 +83,15 @@ func (r *UserRepository) Update(user *model.User) error {
 }
 
 func (r *UserRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.users[id]; !ok {
+		return ErrUserNotFound
+	}
+
+	delete(r.users, id)
+
 	return nil
 }
 

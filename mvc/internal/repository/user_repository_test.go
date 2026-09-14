@@ -143,3 +143,28 @@ func TestUserRepository_Update_DuplicateEmail(t *testing.T) {
 		t.Fatalf("expected ErrEmailTaken, got %v", err)
 	}
 }
+
+func TestUserRepository_Delete(t *testing.T) {
+	repo := repository.NewUserRepository()
+
+	user, _ := model.NewUser("Antônio Prado", "antonio@antonioeprado.dev")
+	if err := repo.Create(user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if err := repo.Delete(user.ID); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if _, err := repo.FindByID(user.ID); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
+
+func TestUserRepository_Delete_NotFound(t *testing.T) {
+	repo := repository.NewUserRepository()
+
+	if err := repo.Delete("unknown-id"); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
