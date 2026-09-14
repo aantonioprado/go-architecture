@@ -32,10 +32,39 @@ func (uc *UserInteractor) CreateUser(input CreateUserInput, output UserOutputPor
 		return
 	}
 
-	output.PresentUserCreated(UserOutput{
+	output.PresentUserCreated(toUserOutput(user))
+}
+
+func (uc *UserInteractor) ListUsers(output UserOutputPort) {
+	users, err := uc.repo.FindAll()
+	if err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	items := make([]UserOutput, 0, len(users))
+	for _, user := range users {
+		items = append(items, toUserOutput(user))
+	}
+
+	output.PresentUserList(ListUsersOutput{Users: items})
+}
+
+func (uc *UserInteractor) GetUserById(input GetUserInput, output UserOutputPort) {
+	user, err := uc.repo.FindById(input.ID)
+	if err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	output.PresentUser(toUserOutput(user))
+}
+
+func toUserOutput(user *entities.User) UserOutput {
+	return UserOutput{
 		ID:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,
 		CreatedAt: user.CreatedAt,
-	})
+	}
 }

@@ -2,10 +2,14 @@ package controller_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/controller"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/dto"
@@ -18,6 +22,15 @@ func newUserController() *controller.UserController {
 	interactor := usecases.NewUserInteractor(repo)
 
 	return controller.NewUserController(interactor)
+}
+
+func newRequestWithID(method, target, id string, body io.Reader) *http.Request {
+	req := httptest.NewRequest(method, target, body)
+
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", id)
+
+	return req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 }
 
 func TestUserController_CreateUser(t *testing.T) {
@@ -79,5 +92,65 @@ func TestUserController_CreateUser_DuplicateEmail(t *testing.T) {
 
 	if rec.Code != http.StatusConflict {
 		t.Fatalf("expected status %d, got %d", http.StatusConflict, rec.Code)
+	}
+}
+
+func TestUserController_ListUsers(t *testing.T) {
+	ctrl := newUserController()
+
+	body, _ := json.Marshal(dto.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	ctrl.CreateUser(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	req := httptest.NewRequest(http.MethodGet, "/users", nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.ListUsers(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+
+	var res []dto.UserResponse
+	if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if len(res) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(res))
+	}
+}
+
+func TestUserController_GetUserById(t *testing.T) {
+	ctrl := newUserController()
+
+	body, _ := json.Marshal(dto.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	createRec := httptest.NewRecorder()
+	ctrl.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
+
+	var created dto.UserResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := newRequestWithID(http.MethodGet, "/users/"+created.ID, created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.GetUserById(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+}
+
+func TestUserController_GetUserById_NotFound(t *testing.T) {
+	ctrl := newUserController()
+
+	req := newRequestWithID(http.MethodGet, "/users/unknown-id", "unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	ctrl.GetUserById(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
 	}
 }

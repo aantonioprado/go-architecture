@@ -23,6 +23,24 @@ func (r *fakeUserRepository) Create(user *entities.User) error {
 	return nil
 }
 
+func (r *fakeUserRepository) FindAll() ([]*entities.User, error) {
+	users := make([]*entities.User, 0, len(r.users))
+	for _, user := range r.users {
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
+func (r *fakeUserRepository) FindById(id string) (*entities.User, error) {
+	user, ok := r.users[id]
+	if !ok {
+		return nil, usecases.ErrUserNotFound
+	}
+
+	return user, nil
+}
+
 func (r *fakeUserRepository) FindByEmail(email string) (*entities.User, error) {
 	for _, user := range r.users {
 		if user.Email == email {
@@ -35,11 +53,21 @@ func (r *fakeUserRepository) FindByEmail(email string) (*entities.User, error) {
 
 type fakePresenter struct {
 	created *usecases.UserOutput
+	user    *usecases.UserOutput
+	list    *usecases.ListUsersOutput
 	err     error
 }
 
 func (p *fakePresenter) PresentUserCreated(output usecases.UserOutput) {
 	p.created = &output
+}
+
+func (p *fakePresenter) PresentUser(output usecases.UserOutput) {
+	p.user = &output
+}
+
+func (p *fakePresenter) PresentUserList(output usecases.ListUsersOutput) {
+	p.list = &output
 }
 
 func (p *fakePresenter) PresentError(err error) {
@@ -92,5 +120,47 @@ func TestUserInteractor_CreateUser_DuplicateEmail(t *testing.T) {
 
 	if second.err == nil {
 		t.Fatal("expected PresentError to be called for duplicate email")
+	}
+}
+
+func TestUserInteractor_ListUsers(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, &fakePresenter{})
+
+	out := &fakePresenter{}
+	interactor.ListUsers(out)
+
+	if out.list == nil {
+		t.Fatal("expected PresentUserList to be called")
+	}
+
+	if len(out.list.Users) != 1 {
+		t.Fatalf("expected 1 user, got %d", len(out.list.Users))
+	}
+}
+
+func TestUserInteractor_GetUserById(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	created := &fakePresenter{}
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, created)
+
+	out := &fakePresenter{}
+	interactor.GetUserById(usecases.GetUserInput{ID: created.created.ID}, out)
+
+	if out.user == nil {
+		t.Fatal("expected PresentUser to be called")
+	}
+}
+
+func TestUserInteractor_GetUserById_NotFound(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	out := &fakePresenter{}
+	interactor.GetUserById(usecases.GetUserInput{ID: "unknown-id"}, out)
+
+	if out.err == nil {
+		t.Fatal("expected PresentError to be called")
 	}
 }

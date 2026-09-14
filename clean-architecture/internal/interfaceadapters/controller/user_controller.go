@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/dto"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/interfaceadapters/presenter"
 	"github.com/aantonioprado/go-architecture/clean-architecture/internal/usecases"
@@ -34,5 +36,19 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	c.usecase.CreateUser(usecases.CreateUserInput{
 		Name:  req.Name,
 		Email: req.Email,
+	}, out)
+}
+
+func (c *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
+	out := presenter.NewHTTPUserPresenter(w)
+
+	c.usecase.ListUsers(out)
+}
+
+func (c *UserController) GetUserById(w http.ResponseWriter, r *http.Request) {
+	out := presenter.NewHTTPUserPresenter(w)
+
+	c.usecase.GetUserById(usecases.GetUserInput{
+		ID: chi.URLParam(r, "id"),
 	}, out)
 }

@@ -13,3 +13,11 @@ type UserOutput struct {
 	Email     string
 	CreatedAt time.Time
 }
+
+type GetUserInput struct {
+	ID string
+}
+
+type ListUsersOutput struct {
+	Users []UserOutput
+}

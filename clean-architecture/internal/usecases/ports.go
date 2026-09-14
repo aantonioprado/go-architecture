@@ -15,6 +15,8 @@ var (
 // case ring, and implemented by the outer gateway.
 type UserRepository interface {
 	Create(user *entities.User) error
+	FindAll() ([]*entities.User, error)
+	FindById(id string) (*entities.User, error)
 	FindByEmail(email string) (*entities.User, error)
 }
 
@@ -22,6 +24,8 @@ type UserRepository interface {
 // case ring, and implemented by the outer presenter.
 type UserOutputPort interface {
 	PresentUserCreated(output UserOutput)
+	PresentUser(output UserOutput)
+	PresentUserList(output ListUsersOutput)
 	PresentError(err error)
 }
 
@@ -29,4 +33,6 @@ type UserOutputPort interface {
 // implemented by the interactor.
 type UserInputPort interface {
 	CreateUser(input CreateUserInput, output UserOutputPort)
+	ListUsers(output UserOutputPort)
+	GetUserById(input GetUserInput, output UserOutputPort)
 }

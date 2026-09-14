@@ -25,6 +25,19 @@ func (p *HTTPUserPresenter) PresentUserCreated(output usecases.UserOutput) {
 	p.writeJSON(http.StatusCreated, toUserResponse(output))
 }
 
+func (p *HTTPUserPresenter) PresentUser(output usecases.UserOutput) {
+	p.writeJSON(http.StatusOK, toUserResponse(output))
+}
+
+func (p *HTTPUserPresenter) PresentUserList(output usecases.ListUsersOutput) {
+	res := make([]dto.UserResponse, 0, len(output.Users))
+	for _, user := range output.Users {
+		res = append(res, toUserResponse(user))
+	}
+
+	p.writeJSON(http.StatusOK, res)
+}
+
 func (p *HTTPUserPresenter) PresentError(err error) {
 	switch {
 	case errors.Is(err, usecases.ErrUserNotFound):
