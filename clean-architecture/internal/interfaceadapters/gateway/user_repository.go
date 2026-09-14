@@ -69,6 +69,19 @@ func (r *InMemoryUserRepository) Update(user *entities.User) error {
 	return nil
 }
 
+func (r *InMemoryUserRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.users[id]; !ok {
+		return usecases.ErrUserNotFound
+	}
+
+	delete(r.users, id)
+
+	return nil
+}
+
 func (r *InMemoryUserRepository) FindByEmail(email string) (*entities.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()

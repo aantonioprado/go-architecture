@@ -48,6 +48,16 @@ func (r *fakeUserRepository) Update(user *entities.User) error {
 	return nil
 }
 
+func (r *fakeUserRepository) Delete(id string) error {
+	if _, ok := r.users[id]; !ok {
+		return usecases.ErrUserNotFound
+	}
+
+	delete(r.users, id)
+
+	return nil
+}
+
 func (r *fakeUserRepository) FindByEmail(email string) (*entities.User, error) {
 	for _, user := range r.users {
 		if user.Email == email {
@@ -62,6 +72,7 @@ type fakePresenter struct {
 	created *usecases.UserOutput
 	user    *usecases.UserOutput
 	list    *usecases.ListUsersOutput
+	deleted bool
 	err     error
 }
 
@@ -75,6 +86,10 @@ func (p *fakePresenter) PresentUser(output usecases.UserOutput) {
 
 func (p *fakePresenter) PresentUserList(output usecases.ListUsersOutput) {
 	p.list = &output
+}
+
+func (p *fakePresenter) PresentUserDeleted() {
+	p.deleted = true
 }
 
 func (p *fakePresenter) PresentError(err error) {
@@ -219,5 +234,30 @@ func TestUserInteractor_UpdateUser_DuplicateEmail(t *testing.T) {
 
 	if out.err == nil {
 		t.Fatal("expected PresentError to be called for duplicate email")
+	}
+}
+
+func TestUserInteractor_DeleteUser(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	created := &fakePresenter{}
+	interactor.CreateUser(usecases.CreateUserInput{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"}, created)
+
+	out := &fakePresenter{}
+	interactor.DeleteUser(usecases.DeleteUserInput{ID: created.created.ID}, out)
+
+	if !out.deleted {
+		t.Fatal("expected PresentUserDeleted to be called")
+	}
+}
+
+func TestUserInteractor_DeleteUser_NotFound(t *testing.T) {
+	interactor := usecases.NewUserInteractor(newFakeUserRepository())
+
+	out := &fakePresenter{}
+	interactor.DeleteUser(usecases.DeleteUserInput{ID: "unknown-id"}, out)
+
+	if out.err == nil {
+		t.Fatal("expected PresentError to be called")
 	}
 }

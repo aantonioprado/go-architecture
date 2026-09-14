@@ -85,6 +85,15 @@ func (uc *UserInteractor) UpdateUser(input UpdateUserInput, output UserOutputPor
 	output.PresentUser(toUserOutput(updated))
 }
 
+func (uc *UserInteractor) DeleteUser(input DeleteUserInput, output UserOutputPort) {
+	if err := uc.repo.Delete(input.ID); err != nil {
+		output.PresentError(err)
+		return
+	}
+
+	output.PresentUserDeleted()
+}
+
 func toUserOutput(user *entities.User) UserOutput {
 	return UserOutput{
 		ID:        user.ID,

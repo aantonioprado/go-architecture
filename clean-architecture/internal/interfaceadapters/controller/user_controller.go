@@ -67,3 +67,11 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		Email: req.Email,
 	}, out)
 }
+
+func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	out := presenter.NewHTTPUserPresenter(w)
+
+	c.usecase.DeleteUser(usecases.DeleteUserInput{
+		ID: chi.URLParam(r, "id"),
+	}, out)
+}

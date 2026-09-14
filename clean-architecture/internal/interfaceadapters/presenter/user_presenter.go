@@ -35,6 +35,10 @@ func (p *HTTPUserPresenter) PresentUserList(output usecases.ListUsersOutput) {
 	p.writeJSON(http.StatusOK, res)
 }
 
+func (p *HTTPUserPresenter) PresentUserDeleted() {
+	p.w.WriteHeader(http.StatusNoContent)
+}
+
 func (p *HTTPUserPresenter) PresentError(err error) {
 	switch {
 	case errors.Is(err, usecases.ErrUserNotFound):

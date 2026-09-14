@@ -27,3 +27,7 @@ type UpdateUserInput struct {
 	Name  string
 	Email string
 }
+
+type DeleteUserInput struct {
+	ID string
+}

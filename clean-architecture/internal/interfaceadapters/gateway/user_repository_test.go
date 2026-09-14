@@ -128,3 +128,28 @@ func TestInMemoryUserRepository_Update_NotFound(t *testing.T) {
 		t.Fatalf("expected ErrUserNotFound, got %v", err)
 	}
 }
+
+func TestInMemoryUserRepository_Delete(t *testing.T) {
+	repo := gateway.NewInMemoryUserRepository()
+
+	user := &entities.User{ID: "1", Name: "Antônio Prado", Email: "antonio@antonioeprado.dev", CreatedAt: time.Now()}
+	if err := repo.Create(user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if err := repo.Delete(user.ID); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if _, err := repo.FindById(user.ID); !errors.Is(err, usecases.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
+
+func TestInMemoryUserRepository_Delete_NotFound(t *testing.T) {
+	repo := gateway.NewInMemoryUserRepository()
+
+	if err := repo.Delete("unknown-id"); !errors.Is(err, usecases.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
