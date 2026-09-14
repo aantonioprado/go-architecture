@@ -37,7 +37,7 @@ func (r *UserRepository) Create(user *model.User) error {
 	return nil
 }
 
-func (r *UserRepository) FindByID(id string) (*model.User, error) {
+func (r *UserRepository) FindById(id string) (*model.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 

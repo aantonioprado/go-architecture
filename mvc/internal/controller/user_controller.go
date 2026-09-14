@@ -64,7 +64,7 @@ func (h *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
 func (h *UserController) FindUserById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
-	user, err := h.repo.FindByID(id)
+	user, err := h.repo.FindById(id)
 	if err != nil {
 		writeRepositoryError(w, err)
 		return
@@ -83,7 +83,7 @@ func (h *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.repo.FindByID(id)
+	user, err := h.repo.FindById(id)
 	if err != nil {
 		writeRepositoryError(w, err)
 		return
