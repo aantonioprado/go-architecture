@@ -123,7 +123,7 @@ func TestUserController_ListUsers(t *testing.T) {
 	}
 }
 
-func TestUserController_FindUserByID(t *testing.T) {
+func TestUserController_FindUserById(t *testing.T) {
 	repo := repository.NewUserRepository()
 	ctrl := controller.NewUserController(repo)
 
@@ -142,20 +142,20 @@ func TestUserController_FindUserByID(t *testing.T) {
 	req := newRequestWithID(http.MethodGet, "/users/"+created.ID, created.ID, nil)
 	rec := httptest.NewRecorder()
 
-	ctrl.FindUserByID(rec, req)
+	ctrl.FindUserById(rec, req)
 
 	if rec.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
 	}
 }
 
-func TestUserController_FindUserByID_NotFound(t *testing.T) {
+func TestUserController_FindUserById_NotFound(t *testing.T) {
 	ctrl := controller.NewUserController(repository.NewUserRepository())
 
 	req := newRequestWithID(http.MethodGet, "/users/unknown-id", "unknown-id", nil)
 	rec := httptest.NewRecorder()
 
-	ctrl.FindUserByID(rec, req)
+	ctrl.FindUserById(rec, req)
 
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)

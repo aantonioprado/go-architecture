@@ -61,7 +61,7 @@ func (h *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, res)
 }
 
-func (h *UserController) FindUserByID(w http.ResponseWriter, r *http.Request) {
+func (h *UserController) FindUserById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	user, err := h.repo.FindByID(id)
