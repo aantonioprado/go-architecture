@@ -147,6 +147,41 @@ func TestGetUserById_NotFound(t *testing.T) {
 	}
 }
 
+func TestDeleteUser(t *testing.T) {
+	router := newRouter(newUserStore())
+
+	createBody, _ := json.Marshal(createUserRequest{Name: "Antônio Prado", Email: "deleta@antonioeprado.dev"})
+	createRec := httptest.NewRecorder()
+	router.ServeHTTP(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(createBody)))
+
+	var created userResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodDelete, "/users/"+created.ID, nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNoContent {
+		t.Fatalf("expected status %d, got %d", http.StatusNoContent, rec.Code)
+	}
+}
+
+func TestDeleteUser_NotFound(t *testing.T) {
+	router := newRouter(newUserStore())
+
+	req := httptest.NewRequest(http.MethodDelete, "/users/unknown-id", nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}
+
 func TestUpdateUser(t *testing.T) {
 	router := newRouter(newUserStore())
 

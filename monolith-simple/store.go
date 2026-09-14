@@ -115,6 +115,19 @@ func (s *userStore) update(id, name, email string) (*User, error) {
 	return updated, nil
 }
 
+func (s *userStore) delete(id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if _, ok := s.users[id]; !ok {
+		return ErrUserNotFound
+	}
+
+	delete(s.users, id)
+
+	return nil
+}
+
 func (s *userStore) findByEmail(email string) *User {
 	for _, user := range s.users {
 		if user.Email == email {
