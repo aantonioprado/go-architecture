@@ -94,3 +94,36 @@ func TestUserRepository_FindAll(t *testing.T) {
 		t.Fatalf("expected 2 users, got %d", len(users))
 	}
 }
+
+func TestUserRepository_Update(t *testing.T) {
+	repo := repository.NewUserRepository()
+
+	user := &model.User{ID: "1", Name: "Antônio Prado", Email: "antonio@antonioeprado.dev", CreatedAt: time.Now()}
+	if err := repo.Create(user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	updated := &model.User{ID: user.ID, Name: "Antônio Elias Prado", Email: user.Email, CreatedAt: user.CreatedAt}
+	if err := repo.Update(updated); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	found, err := repo.FindById(user.ID)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if found.Name != "Antônio Elias Prado" {
+		t.Errorf("expected updated name, got %q", found.Name)
+	}
+}
+
+func TestUserRepository_Update_NotFound(t *testing.T) {
+	repo := repository.NewUserRepository()
+
+	user := &model.User{ID: "unknown-id", Name: "Antônio Prado", Email: "antonio@antonioeprado.dev", CreatedAt: time.Now()}
+
+	if err := repo.Update(user); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}

@@ -69,6 +69,25 @@ func (h *UserHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, toUserResponse(user))
 }
 
+func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	var req dto.UpdateUserRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		response.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	user, err := h.service.Update(id, req.Name, req.Email)
+	if err != nil {
+		writeServiceError(w, err)
+		return
+	}
+
+	response.JSON(w, http.StatusOK, toUserResponse(user))
+}
+
 func toUserResponse(user *model.User) dto.UserResponse {
 	return dto.UserResponse{
 		ID:        user.ID,

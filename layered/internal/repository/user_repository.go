@@ -58,6 +58,19 @@ func (r *UserRepository) FindAll() ([]*model.User, error) {
 	return users, nil
 }
 
+func (r *UserRepository) Update(user *model.User) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.users[user.ID]; !ok {
+		return ErrUserNotFound
+	}
+
+	r.users[user.ID] = user
+
+	return nil
+}
+
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()

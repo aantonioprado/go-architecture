@@ -95,3 +95,51 @@ func TestUserService_List(t *testing.T) {
 		t.Fatalf("expected 1 user, got %d", len(users))
 	}
 }
+
+func TestUserService_Update(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	created, err := svc.Create("Antônio Prado", "antonio@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	updated, err := svc.Update(created.ID, "Antônio Elias Prado", "antonio@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if updated.Name != "Antônio Elias Prado" {
+		t.Errorf("expected updated name, got %q", updated.Name)
+	}
+
+	if updated.CreatedAt != created.CreatedAt {
+		t.Error("expected CreatedAt to be preserved across update")
+	}
+}
+
+func TestUserService_Update_NotFound(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	if _, err := svc.Update("unknown-id", "Antônio Prado", "antonio@antonioeprado.dev"); !errors.Is(err, repository.ErrUserNotFound) {
+		t.Fatalf("expected ErrUserNotFound, got %v", err)
+	}
+}
+
+func TestUserService_Update_DuplicateEmail(t *testing.T) {
+	svc := service.NewUserService(repository.NewUserRepository())
+
+	first, err := svc.Create("Antônio Prado", "antonio@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	second, err := svc.Create("Another User", "another@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if _, err := svc.Update(second.ID, second.Name, first.Email); !errors.Is(err, service.ErrEmailTaken) {
+		t.Fatalf("expected ErrEmailTaken, got %v", err)
+	}
+}

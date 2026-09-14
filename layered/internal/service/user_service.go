@@ -57,6 +57,36 @@ func (s *UserService) GetById(id string) (*model.User, error) {
 	return s.repo.FindById(id)
 }
 
+func (s *UserService) Update(id, name, email string) (*model.User, error) {
+	existing, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := validate(name, email); err != nil {
+		return nil, err
+	}
+
+	if email != existing.Email {
+		if _, err := s.repo.FindByEmail(email); err == nil {
+			return nil, ErrEmailTaken
+		}
+	}
+
+	updated := &model.User{
+		ID:        existing.ID,
+		Name:      name,
+		Email:     email,
+		CreatedAt: existing.CreatedAt,
+	}
+
+	if err := s.repo.Update(updated); err != nil {
+		return nil, err
+	}
+
+	return updated, nil
+}
+
 func validate(name, email string) error {
 	if name == "" {
 		return ErrNameRequired
