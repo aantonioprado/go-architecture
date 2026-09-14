@@ -133,7 +133,7 @@ All architectures enforce these **exact same rules**:
 | Architecture | Separation | Testability | Complexity | Dependency Flow | Best For | Learning Curve |
 |--------------|-----------|-------------|------------|-----------------|----------|----------------|
 | [**Simple Monolith 🏗️**](./monolith-simple/) | ⭐ Low | ⭐⭐ Moderate | ⭐ Very Low | Mixed | Prototypes, MVPs, small tools | ⭐ Very Easy |
-| [**Layered 🏗️**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
+| [**Layered**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
 | [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
 | [**Clean Architecture 🏗️**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
 | [**Hexagonal 🏗️**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
@@ -162,7 +162,7 @@ Single package, minimal structure. All code in one place.
 
 ---
 
-### 2. [Layered Architecture 🏗️](./layered/)
+### 2. [Layered Architecture](./layered/)
 Traditional N-tier: Presentation → Business → Data layers.
 
 **When to use:** Traditional CRUD applications, teams familiar with layered patterns.
@@ -223,7 +223,7 @@ Multiple independent services, each owning its data and deployable separately.
 ```
 go-architecture/
 ├── 🏗️ monolith-simple/              # 1. Simple monolith
-├── 🏗️ layered/                      # 2. Layered
+├── layered/                         # 2. Layered
 ├── mvc/                             # 3. MVC pattern
 ├── 🏗️ clean-architecture/           # 4. Clean Architecture
 ├── 🏗️ hexagonal/                    # 5. Hexagonal (Ports & Adapters)
