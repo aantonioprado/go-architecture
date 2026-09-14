@@ -11,12 +11,17 @@ import (
 
 type Handlers struct {
 	Health *handler.HealthHandler
+	Users  *handler.UserHandler
 }
 
 func NewRouter(h Handlers) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
+
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/", h.Users.CreateUser)
+	})
 
 	r.Get("/health", h.Health.GetHealthCheck)
 
