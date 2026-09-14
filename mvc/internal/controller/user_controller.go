@@ -74,6 +74,33 @@ func (h *UserController) FindUserByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	var req dto.UpdateUserRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		response.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	user, err := h.repo.FindByID(id)
+	if err != nil {
+		writeRepositoryError(w, err)
+		return
+	}
+
+	updated, err := user.Update(req.Name, req.Email)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.repo.Update(updated); err != nil {
+		writeRepositoryError(w, err)
+		return
+	}
+
+	response.JSON(w, http.StatusOK, toUserResponse(updated))
 }
 
 func (h *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {

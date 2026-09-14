@@ -161,3 +161,59 @@ func TestUserController_FindUserByID_NotFound(t *testing.T) {
 		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
 	}
 }
+
+func TestUserController_UpdateUser(t *testing.T) {
+	repo := repository.NewUserRepository()
+	ctrl := controller.NewUserController(repo)
+
+	createBody, _ := json.Marshal(dto.CreateUserRequest{
+		Name:  "Antônio Prado",
+		Email: "antonio@antonioeprado.dev",
+	})
+	createRec := httptest.NewRecorder()
+	ctrl.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(createBody)))
+
+	var created dto.UserResponse
+	if err := json.NewDecoder(createRec.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	updateBody, _ := json.Marshal(dto.UpdateUserRequest{
+		Name:  "Antônio Elias Prado",
+		Email: "antonio@antonioeprado.dev",
+	})
+	req := newRequestWithID(http.MethodPut, "/users/"+created.ID, created.ID, bytes.NewReader(updateBody))
+	rec := httptest.NewRecorder()
+
+	ctrl.UpdateUser(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+
+	var updated dto.UserResponse
+	if err := json.NewDecoder(rec.Body).Decode(&updated); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if updated.Name != "Antônio Elias Prado" {
+		t.Errorf("expected updated name, got %q", updated.Name)
+	}
+}
+
+func TestUserController_UpdateUser_NotFound(t *testing.T) {
+	ctrl := controller.NewUserController(repository.NewUserRepository())
+
+	body, _ := json.Marshal(dto.UpdateUserRequest{
+		Name:  "Antônio Elias Prado",
+		Email: "antonio@antonioeprado.dev",
+	})
+	req := newRequestWithID(http.MethodPut, "/users/unknown-id", "unknown-id", bytes.NewReader(body))
+	rec := httptest.NewRecorder()
+
+	ctrl.UpdateUser(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+}
