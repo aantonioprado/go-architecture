@@ -36,7 +36,7 @@ func TestUserRepository_Create_DuplicateEmail(t *testing.T) {
 	}
 }
 
-func TestUserRepository_FindByID(t *testing.T) {
+func TestUserRepository_FindById(t *testing.T) {
 	repo := repository.NewUserRepository()
 
 	user, _ := model.NewUser("Antônio Prado", "antonio@antonioeprado.dev")
@@ -44,7 +44,7 @@ func TestUserRepository_FindByID(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	found, err := repo.FindByID(user.ID)
+	found, err := repo.FindById(user.ID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -54,10 +54,10 @@ func TestUserRepository_FindByID(t *testing.T) {
 	}
 }
 
-func TestUserRepository_FindByID_NotFound(t *testing.T) {
+func TestUserRepository_FindById_NotFound(t *testing.T) {
 	repo := repository.NewUserRepository()
 
-	if _, err := repo.FindByID("unknown-id"); !errors.Is(err, repository.ErrUserNotFound) {
+	if _, err := repo.FindById("unknown-id"); !errors.Is(err, repository.ErrUserNotFound) {
 		t.Fatalf("expected ErrUserNotFound, got %v", err)
 	}
 }
@@ -103,7 +103,7 @@ func TestUserRepository_Update(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	found, err := repo.FindByID(user.ID)
+	found, err := repo.FindById(user.ID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -156,7 +156,7 @@ func TestUserRepository_Delete(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if _, err := repo.FindByID(user.ID); !errors.Is(err, repository.ErrUserNotFound) {
+	if _, err := repo.FindById(user.ID); !errors.Is(err, repository.ErrUserNotFound) {
 		t.Fatalf("expected ErrUserNotFound, got %v", err)
 	}
 }
