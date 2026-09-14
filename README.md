@@ -134,7 +134,7 @@ All architectures enforce these **exact same rules**:
 |--------------|-----------|-------------|------------|-----------------|----------|----------------|
 | [**Simple Monolith 🏗️**](./monolith-simple/) | ⭐ Low | ⭐⭐ Moderate | ⭐ Very Low | Mixed | Prototypes, MVPs, small tools | ⭐ Very Easy |
 | [**Layered 🏗️**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
-| [**MVC 🏗️**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
+| [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
 | [**Clean Architecture 🏗️**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
 | [**Hexagonal 🏗️**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
 | [**DDD 🏗️**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
@@ -169,7 +169,7 @@ Traditional N-tier: Presentation → Business → Data layers.
 
 ---
 
-### 3. [MVC (Model-View-Controller) 🏗️](./mvc/)
+### 3. [MVC (Model-View-Controller)](./mvc/)
 Separate data (Model), presentation (View), and orchestration (Controller).
 
 **When to use:** Web applications with UI, form-heavy applications, APIs following MVC frameworks.
@@ -224,7 +224,7 @@ Multiple independent services, each owning its data and deployable separately.
 go-architecture/
 ├── 🏗️ monolith-simple/              # 1. Simple monolith
 ├── 🏗️ layered/                      # 2. Layered
-├── 🏗️ mvc/                          # 3. MVC pattern
+├── mvc/                             # 3. MVC pattern
 ├── 🏗️ clean-architecture/           # 4. Clean Architecture
 ├── 🏗️ hexagonal/                    # 5. Hexagonal (Ports & Adapters)
 ├── 🏗️ ddd/                          # 6. Domain-Driven Design
