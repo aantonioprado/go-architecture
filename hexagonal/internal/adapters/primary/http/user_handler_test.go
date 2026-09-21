@@ -35,7 +35,7 @@ func newRequestWithID(method, target, id string, body io.Reader) *http.Request {
 func TestUserHandler_CreateUser(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.CreateUserRequest{
+	body, _ := json.Marshal(httpadapter.UserRequest{
 		Name:  "Antônio Prado",
 		Email: "antonio@antonioeprado.dev",
 	})
@@ -62,7 +62,7 @@ func TestUserHandler_CreateUser(t *testing.T) {
 func TestUserHandler_CreateUser_MissingName(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.CreateUserRequest{
+	body, _ := json.Marshal(httpadapter.UserRequest{
 		Email: "antonio@antonioeprado.dev",
 	})
 
@@ -79,7 +79,7 @@ func TestUserHandler_CreateUser_MissingName(t *testing.T) {
 func TestUserHandler_CreateUser_DuplicateEmail(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.CreateUserRequest{
+	body, _ := json.Marshal(httpadapter.UserRequest{
 		Name:  "Antônio Prado",
 		Email: "antonio@antonioeprado.dev",
 	})
@@ -97,7 +97,7 @@ func TestUserHandler_CreateUser_DuplicateEmail(t *testing.T) {
 func TestUserHandler_ListUsers(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	body, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
 	h.CreateUser(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
 
 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
@@ -122,7 +122,7 @@ func TestUserHandler_ListUsers(t *testing.T) {
 func TestUserHandler_GetUser(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	body, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
 	createRec := httptest.NewRecorder()
 	h.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body)))
 
@@ -157,7 +157,7 @@ func TestUserHandler_GetUser_NotFound(t *testing.T) {
 func TestUserHandler_DeleteUser(t *testing.T) {
 	h := newUserHandler()
 
-	createBody, _ := json.Marshal(httpadapter.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	createBody, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
 	createRec := httptest.NewRecorder()
 	h.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(createBody)))
 
@@ -192,7 +192,7 @@ func TestUserHandler_DeleteUser_NotFound(t *testing.T) {
 func TestUserHandler_UpdateUser(t *testing.T) {
 	h := newUserHandler()
 
-	createBody, _ := json.Marshal(httpadapter.CreateUserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
+	createBody, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Prado", Email: "antonio@antonioeprado.dev"})
 	createRec := httptest.NewRecorder()
 	h.CreateUser(createRec, httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(createBody)))
 
@@ -201,7 +201,7 @@ func TestUserHandler_UpdateUser(t *testing.T) {
 		t.Fatalf("failed to decode response: %v", err)
 	}
 
-	updateBody, _ := json.Marshal(httpadapter.UpdateUserRequest{Name: "Antônio Elias Prado", Email: "antonio@antonioeprado.dev"})
+	updateBody, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Elias Prado", Email: "antonio@antonioeprado.dev"})
 	req := newRequestWithID(http.MethodPut, "/users/"+created.ID, created.ID, bytes.NewReader(updateBody))
 	rec := httptest.NewRecorder()
 
@@ -224,7 +224,7 @@ func TestUserHandler_UpdateUser(t *testing.T) {
 func TestUserHandler_UpdateUser_NotFound(t *testing.T) {
 	h := newUserHandler()
 
-	body, _ := json.Marshal(httpadapter.UpdateUserRequest{Name: "Antônio Elias Prado", Email: "antonio@antonioeprado.dev"})
+	body, _ := json.Marshal(httpadapter.UserRequest{Name: "Antônio Elias Prado", Email: "antonio@antonioeprado.dev"})
 	req := newRequestWithID(http.MethodPut, "/users/unknown-id", "unknown-id", bytes.NewReader(body))
 	rec := httptest.NewRecorder()
 
