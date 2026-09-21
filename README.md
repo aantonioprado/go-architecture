@@ -136,7 +136,7 @@ All architectures enforce these **exact same rules**:
 | [**Layered**](./layered/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Top → Down | Traditional CRUD apps | ⭐⭐ Easy |
 | [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
 | [**Clean Architecture**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
-| [**Hexagonal 🏗️**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
+| [**Hexagonal**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
 | [**DDD 🏗️**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
 | [**Modular Monolith 🏗️**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
 | [**Event-Driven 🏗️**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
@@ -183,7 +183,7 @@ Uncle Bob's Clean Architecture. Dependency Inversion—outer layers depend on in
 
 ---
 
-### 5. [Hexagonal Architecture (Ports & Adapters) 🏗️](./hexagonal/)
+### 5. [Hexagonal Architecture (Ports & Adapters)](./hexagonal/)
 Application core with ports (interfaces) and adapters (implementations) on the outside.
 
 **When to use:** Need to swap infrastructure easily, heavy testing requirements, multiple input sources.
@@ -226,7 +226,7 @@ go-architecture/
 ├── layered/                         # 2. Layered
 ├── mvc/                             # 3. MVC pattern
 ├── clean-architecture/              # 4. Clean Architecture
-├── 🏗️ hexagonal/                    # 5. Hexagonal (Ports & Adapters)
+├── hexagonal/                       # 5. Hexagonal (Ports & Adapters)
 ├── 🏗️ ddd/                          # 6. Domain-Driven Design
 ├── 🏗️ modular-monolith/             # 7. Modular Monolith
 ├── 🏗️ event-driven/                 # 8. Event-Driven
