@@ -11,7 +11,3 @@ type UserResponse struct {
 	Email     string `json:"email"`
 	CreatedAt string `json:"createdAt"`
 }
-
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
