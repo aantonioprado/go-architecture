@@ -11,6 +11,7 @@ type User struct {
 	name      string
 	email     Email
 	createdAt time.Time
+	events    []Event
 }
 
 func Register(name string, email Email) (*User, error) {
@@ -18,12 +19,16 @@ func Register(name string, email Email) (*User, error) {
 		return nil, ErrNameRequired
 	}
 
-	return &User{
+	u := &User{
 		id:        newID(),
 		name:      name,
 		email:     email,
 		createdAt: time.Now(),
-	}, nil
+	}
+
+	u.record(UserRegistered{UserID: u.id, Name: u.name, Email: u.email.String(), At: u.createdAt})
+
+	return u, nil
 }
 
 func (u *User) ChangeDetails(name string, email Email) error {
@@ -34,7 +39,21 @@ func (u *User) ChangeDetails(name string, email Email) error {
 	u.name = name
 	u.email = email
 
+	u.record(UserDetailsChanged{UserID: u.id, Name: u.name, Email: u.email.String(), At: time.Now()})
+
 	return nil
+}
+
+func (u *User) record(event Event) {
+	u.events = append(u.events, event)
+}
+
+func (u *User) Events() []Event {
+	return u.events
+}
+
+func (u *User) ClearEvents() {
+	u.events = nil
 }
 
 func (u *User) ID() string {

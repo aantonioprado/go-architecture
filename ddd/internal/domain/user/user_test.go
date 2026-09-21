@@ -87,3 +87,70 @@ func TestUser_ChangeDetails_MissingName(t *testing.T) {
 		t.Fatalf("expected ErrNameRequired, got %v", err)
 	}
 }
+
+func TestRegister_RecordsUserRegistered(t *testing.T) {
+	email := mustEmail(t, "antonio@antonioeprado.dev")
+
+	u, err := user.Register("Antônio Prado", email)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	events := u.Events()
+	if len(events) != 1 {
+		t.Fatalf("expected 1 event, got %d", len(events))
+	}
+
+	registered, ok := events[0].(user.UserRegistered)
+	if !ok {
+		t.Fatalf("expected UserRegistered, got %T", events[0])
+	}
+
+	if registered.UserID != u.ID() {
+		t.Errorf("expected UserID %q, got %q", u.ID(), registered.UserID)
+	}
+}
+
+func TestUser_ChangeDetails_RecordsUserDetailsChanged(t *testing.T) {
+	email := mustEmail(t, "antonio@antonioeprado.dev")
+
+	u, err := user.Register("Antônio Prado", email)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	u.ClearEvents()
+
+	if err := u.ChangeDetails("Antônio Elias Prado", email); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	events := u.Events()
+	if len(events) != 1 {
+		t.Fatalf("expected 1 event, got %d", len(events))
+	}
+
+	changed, ok := events[0].(user.UserDetailsChanged)
+	if !ok {
+		t.Fatalf("expected UserDetailsChanged, got %T", events[0])
+	}
+
+	if changed.Name != "Antônio Elias Prado" {
+		t.Errorf("expected name %q, got %q", "Antônio Elias Prado", changed.Name)
+	}
+}
+
+func TestUser_ClearEvents(t *testing.T) {
+	email := mustEmail(t, "antonio@antonioeprado.dev")
+
+	u, err := user.Register("Antônio Prado", email)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	u.ClearEvents()
+
+	if len(u.Events()) != 0 {
+		t.Fatalf("expected 0 events after ClearEvents, got %d", len(u.Events()))
+	}
+}
