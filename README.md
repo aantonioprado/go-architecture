@@ -137,7 +137,7 @@ All architectures enforce these **exact same rules**:
 | [**MVC**](./mvc/) | ⭐⭐⭐ Good | ⭐⭐⭐ Good | ⭐⭐ Low | Controller → Model | Web apps, admin panels | ⭐⭐ Easy |
 | [**Clean Architecture**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
 | [**Hexagonal**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
-| [**DDD 🏗️**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
+| [**DDD**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
 | [**Modular Monolith 🏗️**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
 | [**Event-Driven 🏗️**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
 | [**Microservices 🏗️**](./microservices/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Service boundaries | Distributed teams | ⭐⭐⭐⭐⭐ Very Hard |
@@ -190,7 +190,7 @@ Application core with ports (interfaces) and adapters (implementations) on the o
 
 ---
 
-### 6. [Domain-Driven Design (DDD) 🏗️](./ddd/)
+### 6. [Domain-Driven Design (DDD)](./ddd/)
 Rich domain model with ubiquitous language, aggregates, entities, and value objects.
 
 **When to use:** Complex business domains, collaboration with domain experts, long-lived evolving systems.
@@ -227,7 +227,7 @@ go-architecture/
 ├── mvc/                             # 3. MVC pattern
 ├── clean-architecture/              # 4. Clean Architecture
 ├── hexagonal/                       # 5. Hexagonal (Ports & Adapters)
-├── 🏗️ ddd/                          # 6. Domain-Driven Design
+├── ddd/                              # 6. Domain-Driven Design
 ├── 🏗️ modular-monolith/             # 7. Modular Monolith
 ├── 🏗️ event-driven/                 # 8. Event-Driven
 └── 🏗️ microservices/                # 9. Microservices
