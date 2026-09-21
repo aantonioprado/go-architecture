@@ -12,7 +12,6 @@ import (
 	"github.com/aantonioprado/go-architecture/hexagonal/internal/core/ports"
 )
 
-// UserHandler is a primary (driving) adapter: it drives the core through the UserService port.
 type UserHandler struct {
 	service ports.UserService
 }

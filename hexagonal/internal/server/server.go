@@ -9,8 +9,6 @@ import (
 	"github.com/aantonioprado/go-architecture/hexagonal/internal/routes"
 )
 
-// Build is the composition root: it wires the secondary adapter into the core,
-// and the core into the primary adapter, without either side knowing about the other.
 func Build() http.Handler {
 	userRepository := memory.NewInMemoryUserRepository()
 	userService := service.NewUserService(userRepository)
