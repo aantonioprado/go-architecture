@@ -9,9 +9,13 @@ import (
 	"github.com/aantonioprado/go-architecture/microservices/command-service/internal/user"
 )
 
-func Build(queryServiceURL string) http.Handler {
+func Build(queryServiceURL string) (http.Handler, error) {
+	replicator, err := replication.NewHTTPReplicator(queryServiceURL)
+	if err != nil {
+		return nil, err
+	}
+
 	userRepository := user.NewInMemoryUserRepository()
-	replicator := replication.NewHTTPReplicator(queryServiceURL)
 	userService := user.NewUserService(userRepository, replicator)
 	userController := user.NewUserController(userService)
 
@@ -20,5 +24,5 @@ func Build(queryServiceURL string) http.Handler {
 		Users:  userController,
 	}
 
-	return routes.NewRouter(handlers)
+	return routes.NewRouter(handlers), nil
 }

@@ -10,9 +10,6 @@ import (
 	"github.com/aantonioprado/go-architecture/microservices/query-service/internal/response"
 )
 
-// InternalController serves /internal/users, reachable only from
-// command-service inside the docker-compose network, never published to
-// the host and never part of the fixed public API contract.
 type InternalController struct {
 	service *ReadService
 }
@@ -22,28 +19,23 @@ func NewInternalController(service *ReadService) *InternalController {
 }
 
 func (c *InternalController) Replicate(w http.ResponseWriter, r *http.Request) {
-	var req ReplicaRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	if err := c.service.Replicate(toUser(req)); err != nil {
-		writeError(w, err)
-		return
-	}
-
-	response.JSON(w, http.StatusNoContent, nil)
+	c.replicate(w, r, "")
 }
 
 func (c *InternalController) UpdateReplica(w http.ResponseWriter, r *http.Request) {
+	c.replicate(w, r, chi.URLParam(r, "id"))
+}
+
+func (c *InternalController) replicate(w http.ResponseWriter, r *http.Request, id string) {
 	var req ReplicaRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, err)
 		return
 	}
 
-	req.ID = chi.URLParam(r, "id")
+	if id != "" {
+		req.ID = id
+	}
 
 	if err := c.service.Replicate(toUser(req)); err != nil {
 		writeError(w, err)

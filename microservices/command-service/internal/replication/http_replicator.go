@@ -5,38 +5,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/aantonioprado/go-architecture/microservices/command-service/internal/user"
 )
 
-// HTTPReplicator keeps query-service's read model in sync over real HTTP
-// calls, the only thing that connects the two services.
 type HTTPReplicator struct {
 	baseURL string
 	client  *http.Client
 }
 
-func NewHTTPReplicator(baseURL string) *HTTPReplicator {
+func NewHTTPReplicator(baseURL string) (*HTTPReplicator, error) {
+	if _, err := url.Parse(baseURL); err != nil {
+		return nil, err
+	}
+
 	return &HTTPReplicator{
 		baseURL: baseURL,
 		client:  &http.Client{Timeout: 5 * time.Second},
-	}
-}
-
-type replicaPayload struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	CreatedAt string `json:"createdAt"`
+	}, nil
 }
 
 func (r *HTTPReplicator) ReplicateCreate(u user.User) error {
-	return r.send(http.MethodPost, r.baseURL+"/internal/users", toReplicaPayload(u))
+	return r.send(http.MethodPost, r.baseURL+"/internal/users", user.ToUserResponse(&u))
 }
 
 func (r *HTTPReplicator) ReplicateUpdate(u user.User) error {
-	return r.send(http.MethodPut, r.baseURL+"/internal/users/"+u.ID, toReplicaPayload(u))
+	return r.send(http.MethodPut, r.baseURL+"/internal/users/"+u.ID, user.ToUserResponse(&u))
 }
 
 func (r *HTTPReplicator) ReplicateDelete(id string) error {
@@ -73,13 +69,4 @@ func (r *HTTPReplicator) send(method, url string, payload any) error {
 	}
 
 	return nil
-}
-
-func toReplicaPayload(u user.User) replicaPayload {
-	return replicaPayload{
-		ID:        u.ID,
-		Name:      u.Name,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt.Format(time.RFC3339),
-	}
 }

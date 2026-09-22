@@ -10,7 +10,11 @@ import (
 
 func main() {
 	cfg := config.Load()
-	app := server.Build(cfg.QueryServiceURL)
+
+	app, err := server.Build(cfg.QueryServiceURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Printf("Starting command-service on port %s", cfg.Port)
 

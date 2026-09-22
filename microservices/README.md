@@ -77,18 +77,19 @@ It is suitable for:
 With Docker Compose (recommended, since only this configuration wires the real network boundaries between the three services):
 
 ```bash
+cp .env.example .env
 docker compose build
 docker compose up
 ```
 
-Only `gateway` publishes a port to the host (`8080`); `command-service` and `query-service` are reachable only from inside the compose network.
+There is a single `.env.example` at the root of `microservices/`, not one per service: `docker-compose.yml` reads it directly (`${PORT}`, `${COMMAND_SERVICE_URL}`, `${QUERY_SERVICE_URL}`) and injects each value into the right container. `PORT` is the same for all three on purpose, since each runs in its own container and never competes for a host port; only `gateway` publishes one to the host (`8080`), `command-service` and `query-service` are reachable only from inside the compose network.
 
-Without Docker, in three separate terminals (copy each `.env.example` to `.env` first and adjust the URLs to match the ports you choose):
+Without Docker, in three separate terminals, since all three would otherwise fight over the same host ports:
 
 ```bash
-cd query-service && go run ./cmd/api    # PORT=8081
-cd command-service && go run ./cmd/api  # PORT=8082, QUERY_SERVICE_URL=http://localhost:8081
-cd gateway && go run ./cmd/api          # PORT=8080, COMMAND_SERVICE_URL=http://localhost:8082, QUERY_SERVICE_URL=http://localhost:8081
+cd query-service && PORT=8081 go run ./cmd/api
+cd command-service && PORT=8082 QUERY_SERVICE_URL=http://localhost:8081 go run ./cmd/api
+cd gateway && PORT=8080 COMMAND_SERVICE_URL=http://localhost:8082 QUERY_SERVICE_URL=http://localhost:8081 go run ./cmd/api
 ```
 
 ---

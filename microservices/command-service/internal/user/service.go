@@ -26,7 +26,7 @@ func (s *UserService) CreateUser(name, email string) (*User, error) {
 	}
 
 	if err := s.replicator.ReplicateCreate(*user); err != nil {
-		log.Printf("[replication] failed to replicate create for user %s: %v", user.ID, err)
+		logReplicationErr("create", user.ID, err)
 	}
 
 	return user, nil
@@ -54,7 +54,7 @@ func (s *UserService) UpdateUser(id, name, email string) (*User, error) {
 	}
 
 	if err := s.replicator.ReplicateUpdate(*updated); err != nil {
-		log.Printf("[replication] failed to replicate update for user %s: %v", updated.ID, err)
+		logReplicationErr("update", updated.ID, err)
 	}
 
 	return updated, nil
@@ -66,8 +66,12 @@ func (s *UserService) DeleteUser(id string) error {
 	}
 
 	if err := s.replicator.ReplicateDelete(id); err != nil {
-		log.Printf("[replication] failed to replicate delete for user %s: %v", id, err)
+		logReplicationErr("delete", id, err)
 	}
 
 	return nil
+}
+
+func logReplicationErr(action, id string, err error) {
+	log.Printf("[replication] failed to replicate %s for user %s: %v", action, id, err)
 }
