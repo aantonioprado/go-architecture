@@ -88,11 +88,11 @@ func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 func writeError(w http.ResponseWriter, err error) {
 	switch {
 	case errors.Is(err, ErrUserNotFound):
-		response.JSON(w, http.StatusNotFound, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusNotFound, response.ErrorResponse{Error: err.Error()})
 	case errors.Is(err, ErrEmailTaken):
-		response.JSON(w, http.StatusConflict, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusConflict, response.ErrorResponse{Error: err.Error()})
 	default:
-		response.JSON(w, http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
 	}
 }
 
