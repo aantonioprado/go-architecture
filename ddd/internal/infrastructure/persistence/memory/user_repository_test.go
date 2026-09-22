@@ -2,6 +2,7 @@ package memory_test
 
 import (
 	"errors"
+	"sync"
 	"testing"
 
 	"github.com/aantonioprado/go-architecture/ddd/internal/domain/user"
@@ -138,4 +139,88 @@ func TestUserRepository_Delete_NotFound(t *testing.T) {
 	if err := repo.Delete("unknown-id"); !errors.Is(err, user.ErrUserNotFound) {
 		t.Fatalf("expected ErrUserNotFound, got %v", err)
 	}
+}
+
+func TestUserRepository_FindByID_ReturnsIsolatedCopy(t *testing.T) {
+	repo := memory.NewUserRepository()
+
+	u := mustUser(t, "Antônio Prado", "antonio@antonioeprado.dev")
+	if err := repo.Save(u); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	found, err := repo.FindByID(u.ID())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	email, err := user.NewEmail("mutated@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if err := found.ChangeDetails("Mutated", email); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	stillStored, err := repo.FindByID(u.ID())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if stillStored.Name() == "Mutated" {
+		t.Fatal("expected mutating a returned user not to affect what the repository has stored")
+	}
+}
+
+func TestUserRepository_ConcurrentReadWriteSameID(t *testing.T) {
+	repo := memory.NewUserRepository()
+
+	email, err := user.NewEmail("race@antonioeprado.dev")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	u, err := user.Register("Race User", email)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if err := repo.Save(u); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 200; i++ {
+			if found, err := repo.FindByID(u.ID()); err == nil {
+				_ = found.Name()
+			}
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 200; i++ {
+			found, err := repo.FindByID(u.ID())
+			if err != nil {
+				continue
+			}
+
+			if err := found.ChangeDetails("Mutated", email); err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+
+			if err := repo.Save(found); err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+		}
+	}()
+
+	wg.Wait()
 }

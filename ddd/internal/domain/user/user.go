@@ -72,6 +72,15 @@ func (u *User) CreatedAt() time.Time {
 	return u.createdAt
 }
 
+func (u *User) Clone() *User {
+	return &User{
+		id:        u.id,
+		name:      u.name,
+		email:     u.email,
+		createdAt: u.createdAt,
+	}
+}
+
 func newID() string {
 	b := make([]byte, 16)
 	_, _ = rand.Read(b)

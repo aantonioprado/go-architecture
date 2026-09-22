@@ -22,7 +22,7 @@ func (r *UserRepository) Save(u *user.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.users[u.ID()] = u
+	r.users[u.ID()] = u.Clone()
 
 	return nil
 }
@@ -33,7 +33,7 @@ func (r *UserRepository) FindAll() ([]*user.User, error) {
 
 	users := make([]*user.User, 0, len(r.users))
 	for _, u := range r.users {
-		users = append(users, u)
+		users = append(users, u.Clone())
 	}
 
 	sort.Slice(users, func(i, j int) bool {
@@ -52,7 +52,7 @@ func (r *UserRepository) FindByID(id string) (*user.User, error) {
 		return nil, user.ErrUserNotFound
 	}
 
-	return u, nil
+	return u.Clone(), nil
 }
 
 func (r *UserRepository) FindByEmail(email user.Email) (*user.User, error) {
@@ -61,7 +61,7 @@ func (r *UserRepository) FindByEmail(email user.Email) (*user.User, error) {
 
 	for _, u := range r.users {
 		if u.Email() == email {
-			return u, nil
+			return u.Clone(), nil
 		}
 	}
 
