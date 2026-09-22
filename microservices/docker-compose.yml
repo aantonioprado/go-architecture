@@ -1,0 +1,27 @@
+services:
+  command-service:
+    build: ./command-service
+    environment:
+      - PORT=${PORT}
+      - QUERY_SERVICE_URL=${QUERY_SERVICE_URL}
+    expose:
+      - "${PORT}"
+
+  query-service:
+    build: ./query-service
+    environment:
+      - PORT=${PORT}
+    expose:
+      - "${PORT}"
+
+  gateway:
+    build: ./gateway
+    environment:
+      - PORT=${PORT}
+      - COMMAND_SERVICE_URL=${COMMAND_SERVICE_URL}
+      - QUERY_SERVICE_URL=${QUERY_SERVICE_URL}
+    ports:
+      - "8080:${PORT}"
+    depends_on:
+      - command-service
+      - query-service

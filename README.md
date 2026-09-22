@@ -140,7 +140,7 @@ All architectures enforce these **exact same rules**:
 | [**DDD**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
 | [**Modular Monolith**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
 | [**Event-Driven**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
-| [**Microservices 🏗️**](./microservices/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Service boundaries | Distributed teams | ⭐⭐⭐⭐⭐ Very Hard |
+| [**Microservices**](./microservices/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Service boundaries | Distributed teams | ⭐⭐⭐⭐⭐ Very Hard |
 
 ### Key Insights
 
@@ -211,7 +211,7 @@ Components communicate via events, enabling loose coupling and async workflows.
 
 ---
 
-### 9. [Microservices 🏗️](./microservices/)
+### 9. [Microservices](./microservices/)
 Multiple independent services, each owning its data and deployable separately.
 
 **When to use:** Large distributed teams, independent scaling needs, polyglot requirements.
@@ -230,7 +230,7 @@ go-architecture/
 ├── ddd/                              # 6. Domain-Driven Design
 ├── modular-monolith/                 # 7. Modular Monolith
 ├── event-driven/                     # 8. Event-Driven
-└── 🏗️ microservices/                # 9. Microservices
+└── microservices/                    # 9. Microservices
 ```
 
 ---
