@@ -36,6 +36,7 @@ modular-monolith/
 │   └── shared/
 │       ├── config/
 │       ├── middleware/
+│       ├── response/
 │       ├── routes/
 │       └── server/
 ├── .air.toml

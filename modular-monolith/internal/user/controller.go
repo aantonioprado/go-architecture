@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+
+	"github.com/aantonioprado/go-architecture/modular-monolith/internal/shared/response"
 )
 
 type UserController struct {
@@ -30,7 +32,7 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, toUserResponse(user))
+	response.JSON(w, http.StatusCreated, toUserResponse(user))
 }
 
 func (c *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +47,7 @@ func (c *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
 		res = append(res, toUserResponse(user))
 	}
 
-	writeJSON(w, http.StatusOK, res)
+	response.JSON(w, http.StatusOK, res)
 }
 
 func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +57,7 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, toUserResponse(user))
+	response.JSON(w, http.StatusOK, toUserResponse(user))
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +73,7 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, toUserResponse(user))
+	response.JSON(w, http.StatusOK, toUserResponse(user))
 }
 
 func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -80,28 +82,17 @@ func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusNoContent, nil)
-}
-
-func writeJSON(w http.ResponseWriter, status int, data any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-
-	if data == nil {
-		return
-	}
-
-	_ = json.NewEncoder(w).Encode(data)
+	response.JSON(w, http.StatusNoContent, nil)
 }
 
 func writeError(w http.ResponseWriter, err error) {
 	switch {
 	case errors.Is(err, ErrUserNotFound):
-		writeJSON(w, http.StatusNotFound, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusNotFound, ErrorResponse{Error: err.Error()})
 	case errors.Is(err, ErrEmailTaken):
-		writeJSON(w, http.StatusConflict, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusConflict, ErrorResponse{Error: err.Error()})
 	default:
-		writeJSON(w, http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		response.JSON(w, http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 	}
 }
 
