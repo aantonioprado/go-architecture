@@ -2,7 +2,9 @@ package user_test
 
 import (
 	"errors"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/aantonioprado/go-architecture/microservices/command-service/internal/user"
 )
@@ -69,6 +71,7 @@ func (r *fakeRepository) FindByEmail(email string) (*user.User, error) {
 }
 
 type fakeReplicator struct {
+	mu      sync.Mutex
 	created []user.User
 	updated []user.User
 	deleted []string
@@ -79,7 +82,12 @@ func (r *fakeReplicator) ReplicateCreate(u user.User) error {
 	if r.failing {
 		return errors.New("replication unavailable")
 	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	r.created = append(r.created, u)
+
 	return nil
 }
 
@@ -87,7 +95,12 @@ func (r *fakeReplicator) ReplicateUpdate(u user.User) error {
 	if r.failing {
 		return errors.New("replication unavailable")
 	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	r.updated = append(r.updated, u)
+
 	return nil
 }
 
@@ -95,7 +108,12 @@ func (r *fakeReplicator) ReplicateDelete(id string) error {
 	if r.failing {
 		return errors.New("replication unavailable")
 	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	r.deleted = append(r.deleted, id)
+
 	return nil
 }
 
@@ -112,6 +130,8 @@ func TestUserService_CreateUser(t *testing.T) {
 		t.Errorf("expected email %q, got %q", "antonio@antonioeprado.dev", u.Email)
 	}
 
+	svc.Wait()
+
 	if len(rep.created) != 1 {
 		t.Fatalf("expected 1 replicated create, got %d", len(rep.created))
 	}
@@ -119,6 +139,47 @@ func TestUserService_CreateUser(t *testing.T) {
 	if rep.created[0].ID != u.ID {
 		t.Errorf("expected replicated ID %q, got %q", u.ID, rep.created[0].ID)
 	}
+}
+
+type blockingReplicator struct {
+	release chan struct{}
+}
+
+func (r *blockingReplicator) ReplicateCreate(u user.User) error {
+	<-r.release
+	return nil
+}
+
+func (r *blockingReplicator) ReplicateUpdate(u user.User) error {
+	<-r.release
+	return nil
+}
+
+func (r *blockingReplicator) ReplicateDelete(id string) error {
+	<-r.release
+	return nil
+}
+
+func TestUserService_CreateUser_DoesNotWaitForReplication(t *testing.T) {
+	rep := &blockingReplicator{release: make(chan struct{})}
+	svc := user.NewUserService(newFakeRepository(), rep)
+
+	done := make(chan struct{})
+	go func() {
+		if _, err := svc.CreateUser("Antônio Prado", "antonio@antonioeprado.dev"); err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+		close(done)
+	}()
+
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("CreateUser blocked waiting for replication to finish")
+	}
+
+	close(rep.release)
+	svc.Wait()
 }
 
 func TestUserService_CreateUser_ReplicationFailureDoesNotFailWrite(t *testing.T) {
@@ -133,6 +194,8 @@ func TestUserService_CreateUser_ReplicationFailureDoesNotFailWrite(t *testing.T)
 	if u == nil {
 		t.Fatal("expected a created user")
 	}
+
+	svc.Wait()
 }
 
 func TestUserService_CreateUser_MissingName(t *testing.T) {
@@ -164,6 +227,8 @@ func TestUserService_UpdateUser(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	svc.Wait()
+
 	updated, err := svc.UpdateUser(created.ID, "Antônio Elias Prado", "antonio@antonioeprado.dev")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -172,6 +237,8 @@ func TestUserService_UpdateUser(t *testing.T) {
 	if updated.Name != "Antônio Elias Prado" {
 		t.Errorf("expected updated name, got %q", updated.Name)
 	}
+
+	svc.Wait()
 
 	if len(rep.updated) != 1 {
 		t.Fatalf("expected 1 replicated update, got %d", len(rep.updated))
@@ -212,9 +279,13 @@ func TestUserService_DeleteUser(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	svc.Wait()
+
 	if err := svc.DeleteUser(created.ID); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+
+	svc.Wait()
 
 	if len(rep.deleted) != 1 || rep.deleted[0] != created.ID {
 		t.Fatalf("expected replicated delete for %q, got %v", created.ID, rep.deleted)

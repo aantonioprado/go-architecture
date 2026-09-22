@@ -14,6 +14,8 @@ The fixed API only has one resource, `User`, so "multiple independent services, 
 
 Each is its own Go module (its own `go.mod`), with no package shared between them. `command-service` and `query-service` do not import each other or a common library; the only thing that connects them is a real HTTP call `command-service` makes to `query-service` after every write, to keep the read side in sync. That call, not a shared database and not a message queue, is the entire coupling between the two.
 
+That HTTP call runs in the background: `command-service` responds to its own caller as soon as it has persisted the write to its own store, without waiting for the call to `query-service` to finish. A failed or slow replication call never slows down or fails the write; it only means `query-service`'s copy is temporarily stale, which is what eventual consistency actually means here, not just a term in this README.
+
 ---
 
 ## Dependency Flow
@@ -24,7 +26,7 @@ client --> gateway --(POST/PUT/DELETE /users)--> command-service --(HTTP replica
 ```
 
 - `gateway` depends on two `httputil.ReverseProxy` instances, one per backend base URL - it never imports either service's code, it only knows two URLs.
-- `command-service` depends on a `Replicator` interface it defines itself; `internal/replication` is the only concrete implementation, making an HTTP call.
+- `command-service` depends on a `Replicator` interface it defines itself; `internal/replication` is the only concrete implementation, making the HTTP call in its own goroutine, never on the request's critical path.
 - `query-service` never calls out to anyone; it is only ever called.
 
 ---
