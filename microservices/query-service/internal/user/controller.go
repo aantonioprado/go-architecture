@@ -10,9 +10,6 @@ import (
 	"github.com/aantonioprado/go-architecture/microservices/query-service/internal/response"
 )
 
-// UserController is read-only: this service is the query side of the CQRS
-// split, writes only ever arrive here as replication from command-service
-// (see InternalController).
 type UserController struct {
 	service *ReadService
 }

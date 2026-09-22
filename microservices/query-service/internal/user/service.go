@@ -1,7 +1,5 @@
 package user
 
-// ReadService is the query side of the CQRS split: it never validates or
-// generates anything, it only serves what has been replicated to it.
 type ReadService struct {
 	repo Repository
 }

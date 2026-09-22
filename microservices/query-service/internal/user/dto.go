@@ -7,10 +7,6 @@ type UserResponse struct {
 	CreatedAt string `json:"createdAt"`
 }
 
-// ReplicaRequest is the wire shape command-service sends to /internal/users;
-// unlike UserRequest elsewhere in this repository, it carries the full
-// record (including ID and CreatedAt), since this service never generates
-// those itself.
 type ReplicaRequest struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
