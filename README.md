@@ -138,7 +138,7 @@ All architectures enforce these **exact same rules**:
 | [**Clean Architecture**](./clean-architecture/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Inward | Complex domains, long-lived systems | ⭐⭐⭐⭐ Hard |
 | [**Hexagonal**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
 | [**DDD**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
-| [**Modular Monolith 🏗️**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
+| [**Modular Monolith**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
 | [**Event-Driven 🏗️**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
 | [**Microservices 🏗️**](./microservices/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Service boundaries | Distributed teams | ⭐⭐⭐⭐⭐ Very Hard |
 
@@ -197,7 +197,7 @@ Rich domain model with ubiquitous language, aggregates, entities, and value obje
 
 ---
 
-### 7. [Modular Monolith 🏗️](./modular-monolith/)
+### 7. [Modular Monolith](./modular-monolith/)
 Single deployable with strong module boundaries and explicit contracts.
 
 **When to use:** Growing teams needing autonomy, monolith that needs better structure, preparing for microservices.
@@ -228,7 +228,7 @@ go-architecture/
 ├── clean-architecture/              # 4. Clean Architecture
 ├── hexagonal/                       # 5. Hexagonal (Ports & Adapters)
 ├── ddd/                              # 6. Domain-Driven Design
-├── 🏗️ modular-monolith/             # 7. Modular Monolith
+├── modular-monolith/                 # 7. Modular Monolith
 ├── 🏗️ event-driven/                 # 8. Event-Driven
 └── 🏗️ microservices/                # 9. Microservices
 ```
