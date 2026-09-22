@@ -139,7 +139,7 @@ All architectures enforce these **exact same rules**:
 | [**Hexagonal**](./hexagonal/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ High | Outside → Inside | Swappable infrastructure | ⭐⭐⭐⭐ Hard |
 | [**DDD**](./ddd/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Domain-centric | Rich domains, complex logic | ⭐⭐⭐⭐⭐ Very Hard |
 | [**Modular Monolith**](./modular-monolith/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Moderate | Module boundaries | Scalable monoliths | ⭐⭐⭐ Moderate |
-| [**Event-Driven 🏗️**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
+| [**Event-Driven**](./event-driven/) | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐ Good | ⭐⭐⭐⭐ High | Event flow | Async workflows | ⭐⭐⭐⭐ Hard |
 | [**Microservices 🏗️**](./microservices/) | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Very High | Service boundaries | Distributed teams | ⭐⭐⭐⭐⭐ Very Hard |
 
 ### Key Insights
@@ -204,7 +204,7 @@ Single deployable with strong module boundaries and explicit contracts.
 
 ---
 
-### 8. [Event-Driven Architecture 🏗️](./event-driven/)
+### 8. [Event-Driven Architecture](./event-driven/)
 Components communicate via events, enabling loose coupling and async workflows.
 
 **When to use:** Async workflows (email, notifications), need to decouple systems, event sourcing.
@@ -229,7 +229,7 @@ go-architecture/
 ├── hexagonal/                       # 5. Hexagonal (Ports & Adapters)
 ├── ddd/                              # 6. Domain-Driven Design
 ├── modular-monolith/                 # 7. Modular Monolith
-├── 🏗️ event-driven/                 # 8. Event-Driven
+├── event-driven/                     # 8. Event-Driven
 └── 🏗️ microservices/                # 9. Microservices
 ```
 
