@@ -38,13 +38,7 @@ func (s *applicationService) CreateUser(name, email string) (*user.User, error) 
 		return nil, err
 	}
 
-	if err := s.repo.Save(u); err != nil {
-		return nil, err
-	}
-
-	s.publish(u)
-
-	return u, nil
+	return s.saveAndPublish(u)
 }
 
 func (s *applicationService) ListUsers() ([]*user.User, error) {
@@ -76,13 +70,7 @@ func (s *applicationService) UpdateUser(id, name, email string) (*user.User, err
 		return nil, err
 	}
 
-	if err := s.repo.Save(u); err != nil {
-		return nil, err
-	}
-
-	s.publish(u)
-
-	return u, nil
+	return s.saveAndPublish(u)
 }
 
 func (s *applicationService) DeleteUser(id string) error {
@@ -90,15 +78,25 @@ func (s *applicationService) DeleteUser(id string) error {
 		return err
 	}
 
-	log.Printf("[domain-event] %T: %+v", user.UserDeleted{}, user.UserDeleted{UserID: id, At: time.Now()})
+	logEvent(user.UserDeleted{UserID: id, At: time.Now()})
 
 	return nil
 }
 
-func (s *applicationService) publish(u *user.User) {
+func (s *applicationService) saveAndPublish(u *user.User) (*user.User, error) {
+	if err := s.repo.Save(u); err != nil {
+		return nil, err
+	}
+
 	for _, event := range u.Events() {
-		log.Printf("[domain-event] %T: %+v", event, event)
+		logEvent(event)
 	}
 
 	u.ClearEvents()
+
+	return u, nil
+}
+
+func logEvent(event user.Event) {
+	log.Printf("[domain-event] %T: %+v", event, event)
 }
