@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go list ./... >/dev/null"
+full_bin = "go run ./cmd/api"
+
+include_ext = ["go"]
+exclude_dir = ["tmp","bin"]
+
+[log]
+time = true
